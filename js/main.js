@@ -137,28 +137,37 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
  */
 createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
+  li.classList.add('m-center', 'card');
 
   const image = document.createElement('img');
   image.className = 'restaurant-img';
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  image.classList.add('b-r20-r3--top', 'flex', 'shadow-dark');
   li.append(image);
 
-  const name = document.createElement('h1');
+  const wrap = document.createElement('div');
+  wrap.classList.add('mb-extralarge', 'pa-medium', 'b-r20-r3--bottom', 'shadow-dark', 'bg-white');
+  li.append(wrap);
+
+  const name = document.createElement('h3');
+  name.classList.add('mb-normal', 'uppercase', 'orange', 'fw-3', 'f-5', 'card-title');
   name.innerHTML = restaurant.name;
-  li.append(name);
+  wrap.append(name);
 
   const neighborhood = document.createElement('p');
   neighborhood.innerHTML = restaurant.neighborhood;
-  li.append(neighborhood);
+  wrap.append(neighborhood);
 
   const address = document.createElement('p');
   address.innerHTML = restaurant.address;
-  li.append(address);
+  address.classList.add('card-address');
+  wrap.append(address);
 
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
   more.href = DBHelper.urlForRestaurant(restaurant);
-  li.append(more)
+  more.classList.add('mb-normal', 'mt-large', 'b-1', 'b-r5', 'dib', 'blue', 'no-underline', 'uppercase', 'btn');
+  wrap.append(more);
 
   return li
 }

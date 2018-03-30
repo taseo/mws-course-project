@@ -1,0 +1,21 @@
+/* text related properties */
+
+
+.center {
+  text-align: center;
+}
+
+
+.right {
+  text-align: right;
+}
+
+
+.no-underline {
+  text-decoration: none;
+}
+
+
+.uppercase {
+  text-transform: uppercase;
+}

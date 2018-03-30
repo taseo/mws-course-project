@@ -1,0 +1,22 @@
+/* accessibility related utility classes */
+
+
+.show-on-focus {
+  position: absolute;
+  top: 0;
+  padding: 0 1.2rem;
+  line-height: 80px;
+  clip: rect(1px, 1px, 1px, 1px);
+}
+
+
+.show-on-focus:focus {
+  width: auto;
+  height: auto;
+  clip: auto;
+}
+
+
+.show-on-focus:hover {
+  text-decoration: underline;
+}

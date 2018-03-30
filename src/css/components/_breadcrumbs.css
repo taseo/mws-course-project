@@ -1,0 +1,8 @@
+/* breadcrumbs */
+
+
+.breadcrumb-divider:before {
+  padding-right: 1rem;
+  color: inherit;
+  content: "/\00a0";
+}

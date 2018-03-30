@@ -1,0 +1,36 @@
+/* flexbox */
+
+
+.flex {
+  display: flex;
+}
+
+
+.wrap {
+  flex-wrap: wrap;
+}
+
+
+.items-center {
+  align-items: center;
+}
+
+
+.content-between {
+  align-content: space-between;
+}
+
+
+.justify-center {
+  justify-content: center;
+}
+
+
+.justify-between {
+  justify-content: space-between;
+}
+
+
+.justify-end {
+  justify-content: flex-end;
+}

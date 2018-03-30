@@ -168,3 +168,15 @@ class DBHelper {
   }
 
 }
+
+// provides functionality for skip to content link
+
+const mainContent = document.getElementById('content-start');
+
+document.getElementById('skip-content').addEventListener('click', (e) => {
+  e.preventDefault();
+
+  mainContent.setAttribute('tabindex', '1');
+  mainContent.focus();
+  mainContent.removeAttribute('tabindex');
+});

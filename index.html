@@ -1,46 +1,72 @@
 <!DOCTYPE html>
-<html>
 
-<head>
-  <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
-  <link rel="stylesheet" href="css/styles.css">
-  <title>Restaurant Reviews</title>
-</head>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Restaurant Reviews</title>
+    <link rel="stylesheet" href="css/main.css">
+  </head>
 
-<body>
-  <header>
-    <nav>
-      <h1><a href="/">Restaurant Reviews</a></h1>
-    </nav>
-  </header>
+  <body class="grid content-between">
 
-  <main id="maincontent">
-    <section id="map-container">
-      <div id="map"></div>
-    </section>
-    <section>
-      <div class="filter-options">
-        <h2>Filter Results</h2>
-        <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()">
-          <option value="all">All Neighborhoods</option>
-        </select>
-        <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()">
-          <option value="all">All Cuisines</option>
-        </select>
-      </div>
-      <ul id="restaurants-list"></ul>
-    </section>
-  </main>
+    <!-- wrapper ensures that footer always gets pushed to the bottom -->
 
-  <script type="application/javascript" charset="utf-8" src="js/dbhelper.js"></script>
-  <script type="application/javascript" charset="utf-8" src="js/main.js"></script>
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=initMap"></script>
+    <div>
+      <header>
+	<nav>
+	  <h1 class="fixed z-10 w--100 h-80 flex items-center justify-center center f-5 fw-3 bg-dark">
+	    <a href="/" class="gutter white no-underline uppercase ls-10">Restaurant Reviews</a>
+	  </h1>
 
+	  <a href="#content-start" id="skip-content" class="z-10 white no-underline show-on-focus">Skip to content</a>
+	</nav>
+      </header>
 
-  <footer id="footer">
-    Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
-  </footer>
+      <section class="mt-80">
+	<h2 id="map-description" class="dn">Map with displayed addresses for reviewed restaurants</h2>
+	<div id="map" class="shadow-light" role="application" aria-describedby="map-description"></div>
+      </section>
 
-</body>
+      <main class="container">
+	<div id="content-start" class="absolute"></div>
 
+	<div class="gutter">
+	  <form class="m-medium--v flex wrap justify-end">
+            <h2 class="mb-normal w--100 blue f-5 fw-4 ls-1 uppercase lh-1 right">Filter results</h2>
+
+	    <label class="w--100 dib f-2 right filter-label">Neighborhood
+              <select id="neighborhoods-select"
+		      class="w--100 mb-normal ml-auto p-small--h b-1 b-r3 f-3 black filter"
+		      name="neighborhoods"
+		      onchange="updateRestaurants()">
+		<option value="all">All Neighborhoods</option>
+              </select>
+	    </label>
+
+	    <label class="ml-normal w--100 dib f-2 right filter-label">Cuisine
+	      <select id="cuisines-select"
+		      class="w--100 b-1 b-r3 f-3 p-small--h black filter"
+		      name="cuisines"
+		      onchange="updateRestaurants()">
+		<option value="all">All Cuisines</option>
+              </select>
+	    </label>
+	  </form>
+
+	  <ul id="restaurants-list" class="grid grid-gap-normal col-2-m col-3-l"></ul>
+	</div>
+      </main>
+    </div>
+
+    <footer class="p-medium--v bg-dark">
+      <p class="gutter uppercase gray-a f-1 center ls-1">
+	Copyright (c) 2017 <a href="/" class="no-underline orange fw-7">Restaurant Reviews</a> All Rights Reserved
+      </p>
+    </footer>
+
+    <script src="js/dbhelper.js"></script>
+    <script src="js/main.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD8PGla8GFwqbtof3wYDDQu6zrUScfJVA0&libraries=places&callback=initMap"></script>
+  </body>
 </html>

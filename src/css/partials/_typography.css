@@ -1,0 +1,70 @@
+/* font size */
+
+
+.f-1 {
+  font-size: 0.7em;
+}
+
+
+.f-2 {
+  font-size: 0.9rem;
+}
+
+
+.f-3 {
+  font-size: 1rem;
+}
+
+
+.f-4 {
+  font-size: 1.1rem;
+}
+
+
+.f-5 {
+  font-size: 1.2rem;
+}
+
+
+/* font weight */
+
+
+.fw-3 {
+  font-weight: 300;
+}
+
+
+.fw-4 {
+  font-weight: 400;
+}
+
+
+.fw-7 {
+  font-weight: 700;
+}
+
+
+/* letter spacing */
+
+
+.ls-1 {
+  letter-spacing: 1px;
+}
+
+
+.ls-10 {
+  letter-spacing: 10px;
+}
+
+
+/* line height */
+
+
+.lh-1 {
+  line-height: 1;
+}
+
+
+.lh-17 {
+  line-height: 1.7;
+}

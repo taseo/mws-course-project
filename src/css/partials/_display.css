@@ -1,0 +1,11 @@
+/* display */
+
+
+.dn {
+  display: none;
+}
+
+
+.dib {
+  display: inline-block;
+}

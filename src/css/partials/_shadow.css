@@ -1,0 +1,11 @@
+/* box shadow */
+
+
+.shadow-dark {
+  box-shadow: 2px 3px 15px var(--black-30);
+}
+
+
+.shadow-light {
+  box-shadow: 2px 3px 15px var(--gray-ea);
+}

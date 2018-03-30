@@ -1,0 +1,51 @@
+/* border */
+
+
+.b-1 {
+  border-style: solid;
+  border-width: 1px;
+}
+
+
+.b-1--bottom {
+  border-bottom-style:solid;
+  border-width: 1px;
+}
+
+
+/* border color */
+
+
+.b-gray-e {
+  border-color: var(--gray-e);
+}
+
+
+.b-gray-ea {
+  border-color: var(--gray-ea);
+}
+
+
+/* border radius */
+
+
+.b-r3 {
+  border-radius: 3px;
+}
+
+
+.b-r5 {
+  border-radius: 5px;
+}
+
+
+.b-r20-r3--top {
+  border-top-left-radius: 20px;
+  border-top-right-radius: 3px;
+}
+
+
+.b-r20-r3--bottom {
+  border-bottom-right-radius: 20px;
+  border-bottom-left-radius: 3px;
+}

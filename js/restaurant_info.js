@@ -16,6 +16,10 @@ window.initMap = () => {
       });
       fillBreadcrumb();
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+
+      // set proper aria described by attribute
+
+      document.getElementById('map-description').textContent = `Map with displayed addresse for ${self.restaurant.name} restaurant`;
     }
   });
 }
@@ -56,7 +60,6 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   address.innerHTML = restaurant.address;
 
   const image = document.getElementById('restaurant-img');
-  image.className = 'restaurant-img'
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
 
   const cuisine = document.getElementById('restaurant-cuisine');
@@ -77,13 +80,16 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
   const hours = document.getElementById('restaurant-hours');
   for (let key in operatingHours) {
     const row = document.createElement('tr');
+    row.classList.add('seperator');
 
     const day = document.createElement('td');
     day.innerHTML = key;
+    day.classList.add('w--45', 'b-1--bottom', 'b-gray-e');
     row.appendChild(day);
 
     const time = document.createElement('td');
     time.innerHTML = operatingHours[key];
+    time.classList.add('b-1--bottom', 'b-gray-e');
     row.appendChild(time);
 
     hours.appendChild(row);
@@ -97,6 +103,7 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
+  title.classList.add('m-medium--v', 'orange', 'fw-3', 'f-5');
   container.appendChild(title);
 
   if (!reviews) {
@@ -117,21 +124,35 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
  */
 createReviewHTML = (review) => {
   const li = document.createElement('li');
+  li.classList.add('mb-extralarge');
+
+  const titleWrap = document.createElement('span');
+  titleWrap.classList.add('p-large--h', 'p-small--v', 'w--100', 'b-r20-r3--top', 'flex', 'justify-between', 'items-center', 'bg-dark', 'white', 'shadow-dark');
+  li.append(titleWrap);
+
   const name = document.createElement('p');
   name.innerHTML = review.name;
-  li.appendChild(name);
+  name.classList.add('fw-7', 'f-4');
+  titleWrap.appendChild(name);
 
   const date = document.createElement('p');
   date.innerHTML = review.date;
-  li.appendChild(date);
+  date.classList.add('f-2', 'gray-b8');
+  titleWrap.appendChild(date);
+
+  const wrap = document.createElement('span');
+  wrap.classList.add('pa-medium', 'b-r20-r3--bottom', 'dib', 'bg-white', 'shadow-dark');
+  li.append(wrap);
 
   const rating = document.createElement('p');
   rating.innerHTML = `Rating: ${review.rating}`;
-  li.appendChild(rating);
+  rating.classList.add('mb-normal', 'p-small--h', 'dib', 'b-r3', 'bg-orange', 'white', 'uppercase', 'fw-7', 'ls-1', 'lh-17');
+  wrap.appendChild(rating);
 
   const comments = document.createElement('p');
   comments.innerHTML = review.comments;
-  li.appendChild(comments);
+  comments.classList.add('lh-17');
+  wrap.appendChild(comments);
 
   return li;
 }
@@ -142,6 +163,7 @@ createReviewHTML = (review) => {
 fillBreadcrumb = (restaurant=self.restaurant) => {
   const breadcrumb = document.getElementById('breadcrumb');
   const li = document.createElement('li');
+  li.classList.add('dib', 'lh-1', 'breadcrumb-divider');
   li.innerHTML = restaurant.name;
   breadcrumb.appendChild(li);
 }

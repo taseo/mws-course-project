@@ -1,0 +1,27 @@
+/* item card components */
+
+
+.about-card {
+  max-width: 520px;
+}
+
+
+.card {
+  max-width: 380px;
+}
+
+
+.hours-table tr:last-child td {
+  padding: 0;
+  border: none;
+}
+
+
+.card-title {
+  height: 56px;
+}
+
+
+.card-address {
+  height: 48px;
+}

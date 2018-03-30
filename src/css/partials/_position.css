@@ -1,0 +1,11 @@
+/* position */
+
+
+.fixed {
+  position: fixed;
+}
+
+
+.absolute {
+  position: absolute;
+}
