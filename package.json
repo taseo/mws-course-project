@@ -18,6 +18,7 @@
    },
    "homepage": "https://github.com/taseo/mws-course-project#readme",
    "devDependencies": {
+      "cssnano": "^3.10.0",
       "postcss-import": "^11.1.0",
       "postcss-preset-env": "^3.4.0"
    }
