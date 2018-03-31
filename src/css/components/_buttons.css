@@ -1,25 +1,26 @@
 /* buttons */
 
 
-.btn {
+.btn-more {
+  bottom: 2rem;
   padding: 0.8rem 2rem;
   transition: color 100ms, background-color 100ms;
 }
 
 
-.btn-teal:hover,
-.btn-teal:focus {
+.btn-more:hover,
+.btn-more:focus {
   outline: 0;
   color: var(--white);
   background-color: var(--teal);
 }
 
 
-.btn-teal:focus {
+.btn-more:focus {
   box-shadow: 0 0 0 0 #fff,0 0 2px 2px var(--teal-30);
 }
 
 
-.btn-teal:active {
+.btn-more:active {
   background-color: var(--teal--700);
 }

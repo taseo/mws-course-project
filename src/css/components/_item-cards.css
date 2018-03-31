@@ -2,26 +2,21 @@
 
 
 .about-card {
-  max-width: 520px;
+  max-width: 32rem;
 }
 
 
 .card {
-  max-width: 380px;
+  max-width: 24rem;
+}
+
+
+.inner-card {
+  height: 16rem;
 }
 
 
 .hours-table tr:last-child td {
   padding: 0;
   border: none;
-}
-
-
-.card-title {
-  height: 56px;
-}
-
-
-.card-address {
-  height: 48px;
 }
