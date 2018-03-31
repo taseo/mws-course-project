@@ -31,8 +31,13 @@
 }
 
 
-.blue {
-  color: var(--blue);
+.blue-gray {
+  color: var(--greenblue-gray);
+}
+
+
+.teal {
+  color: var(--teal);
 }
 
 
@@ -56,9 +61,4 @@
 
 .bg-white {
   background-color: var(--white);
-}
-
-
-.bg-orange {
-  background-color: var(--orange);
 }

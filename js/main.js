@@ -150,7 +150,7 @@ createRestaurantHTML = (restaurant) => {
   li.append(wrap);
 
   const name = document.createElement('h3');
-  name.classList.add('mb-normal', 'uppercase', 'orange', 'fw-3', 'f-5', 'card-title');
+  name.classList.add('mb-normal', 'uppercase', 'blue-gray', 'fw-3', 'f-5', 'card-title');
   name.innerHTML = restaurant.name;
   wrap.append(name);
 
@@ -166,7 +166,7 @@ createRestaurantHTML = (restaurant) => {
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
   more.href = DBHelper.urlForRestaurant(restaurant);
-  more.classList.add('mb-normal', 'mt-large', 'b-1', 'b-r5', 'dib', 'blue', 'no-underline', 'uppercase', 'btn');
+  more.classList.add('mb-normal', 'mt-large', 'b-1', 'b-r5', 'dib', 'teal', 'no-underline', 'uppercase', 'btn', 'btn-teal');
   wrap.append(more);
 
   return li

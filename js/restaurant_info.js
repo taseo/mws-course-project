@@ -103,7 +103,7 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
-  title.classList.add('m-medium--v', 'orange', 'fw-3', 'f-5');
+  title.classList.add('m-medium--v', 'blue-gray', 'fw-3', 'f-5');
   container.appendChild(title);
 
   if (!reviews) {
@@ -146,7 +146,7 @@ createReviewHTML = (review) => {
 
   const rating = document.createElement('p');
   rating.innerHTML = `Rating: ${review.rating}`;
-  rating.classList.add('mb-normal', 'p-small--h', 'dib', 'b-r3', 'bg-orange', 'white', 'uppercase', 'fw-7', 'ls-1', 'lh-17');
+  rating.classList.add('mb-normal', 'p-small--h', 'dib', 'b-1', 'b-r3', 'uppercase', 'fw-7', 'ls-1', 'lh-17');
   wrap.appendChild(rating);
 
   const comments = document.createElement('p');

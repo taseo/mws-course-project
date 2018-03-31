@@ -7,11 +7,14 @@
 
   --white: #fff;
   --orange: #f18200;
-  --blue: #3397DB;
+  --teal: #006064;
+  --teal-30: rgba(0,96, 100, 0.7);
+  --teal--700: #00796B;
 
   --gray-a: #aaa;
   --gray-e: #eee;
   --gray-ea: #eaeaea;
   --gray-b8: #B8B8B8;
   --gray-6: #666;
+  --blue-gray: #455A64;
 }

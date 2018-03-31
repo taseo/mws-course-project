@@ -6,6 +6,11 @@
 }
 
 
+.ma-normal {
+  margin: 1rem;
+}
+
+
 .m-center {
   margin: 0 auto;
 }
