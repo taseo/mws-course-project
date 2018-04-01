@@ -1,3 +1,26 @@
+// register service worker
+
+if(navigator.serviceWorker) {
+
+  navigator.serviceWorker.register('sw.js').then(() => {
+    console.log('Service worker registered successfully');
+  }).catch(() => {
+    console.log('Service worker could not register');
+  })
+}
+
+// provide functionality for skip to content link
+
+const mainContent = document.getElementById('content-start');
+
+document.getElementById('skip-content').addEventListener('click', (e) => {
+  e.preventDefault();
+
+  mainContent.setAttribute('tabindex', '1');
+  mainContent.focus();
+  mainContent.removeAttribute('tabindex');
+});
+
 /**
  * Common database helper functions.
  */
@@ -166,17 +189,4 @@ class DBHelper {
     );
     return marker;
   }
-
 }
-
-// provides functionality for skip to content link
-
-const mainContent = document.getElementById('content-start');
-
-document.getElementById('skip-content').addEventListener('click', (e) => {
-  e.preventDefault();
-
-  mainContent.setAttribute('tabindex', '1');
-  mainContent.focus();
-  mainContent.removeAttribute('tabindex');
-});
