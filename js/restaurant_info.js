@@ -156,7 +156,7 @@ createReviewHTML = (review) => {
   titleWrap.appendChild(date);
 
   const wrap = document.createElement('span');
-  wrap.classList.add('pa-medium', 'b-r20-r3--bottom', 'dib', 'bg-white', 'shadow-dark');
+  wrap.classList.add('pa-medium', 'w--100', 'b-r20-r3--bottom', 'dib', 'bg-white', 'shadow-dark');
   li.append(wrap);
 
   const rating = document.createElement('p');
