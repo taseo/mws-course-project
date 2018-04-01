@@ -139,11 +139,25 @@ createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
   li.classList.add('m-center', 'card');
 
-  const image = document.createElement('img');
-  image.className = 'restaurant-img';
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  image.classList.add('b-r20-r3--top', 'flex', 'shadow-dark');
-  li.append(image);
+  const picture = document.createElement('picture');
+
+  const webpSource = document.createElement('source');
+  webpSource.setAttribute('srcset', `img/2x/webp/${restaurant.id}_2x.webp 2x, img/1x/webp/${restaurant.id}_1x_normal.webp`);
+  webpSource.setAttribute('type', 'image/webp');
+  picture.appendChild(webpSource);
+
+  const jpgSource = document.createElement('source');
+  jpgSource.setAttribute('srcset', `img/2x/jpg/${restaurant.id}_2x.jpg 2x, img/1x/jpg/${restaurant.id}_1x_normal.jpg`);
+  jpgSource.setAttribute('type', 'image/jpg');
+  picture.appendChild(jpgSource);
+
+  const defaultSource = document.createElement('img');
+  defaultSource.setAttribute('src', `img/2x/jpg/${restaurant.id}_2x.jpg`);
+  defaultSource.setAttribute('alt', restaurant.photo_description);
+  defaultSource.classList.add('b-r20-r3--top', 'flex', 'shadow-dark');
+  picture.appendChild(defaultSource);
+
+  li.append(picture);
 
   const wrap = document.createElement('div');
   wrap.classList.add('relative', 'mb-extralarge', 'pa-medium', 'b-r20-r3--bottom', 'shadow-dark', 'bg-white', 'inner-card');
