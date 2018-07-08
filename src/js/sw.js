@@ -9,11 +9,10 @@ self.addEventListener('install', (event) => {
       return cache.addAll([
 	'/',
 	'/restaurant.html',
-	'/css/main.css',
-	'/data/restaurants.json',
-	'/js/main.js',
-	'/js/utils.js',
-	'/js/restaurant_info.js'
+	'/main.css',
+	'/restaurants.json',
+	'/index.js',
+	'/restaurant.js'
       ]);
     })
   );

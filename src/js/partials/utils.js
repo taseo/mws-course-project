@@ -1,30 +1,7 @@
-// register service worker
-
-if(navigator.serviceWorker) {
-
-  navigator.serviceWorker.register('sw.js').then(() => {
-    console.log('Service worker registered successfully');
-  }).catch(() => {
-    console.log('Service worker could not register');
-  })
-}
-
-// provide functionality for skip to content link
-
-const mainContent = document.getElementById('content-start');
-
-document.getElementById('skip-content').addEventListener('click', (e) => {
-  e.preventDefault();
-
-  mainContent.setAttribute('tabindex', '1');
-  mainContent.focus();
-  mainContent.removeAttribute('tabindex');
-});
-
 /**
  * Common database helper functions.
  */
-class DBHelper {
+export default class DBHelper {
 
   /**
    * Database URL.
@@ -32,7 +9,7 @@ class DBHelper {
    */
   static get DATABASE_URL() {
     const port = 8000 // Change this to your server port
-    return `http://localhost:${port}/data/restaurants.json`;
+    return `http://localhost:${port}/restaurants.json`;
   }
 
   /**
@@ -179,14 +156,38 @@ class DBHelper {
   /**
    * Map marker for a restaurant.
    */
-	static mapMarkerForRestaurant(restaurant, map) {
+  static mapMarkerForRestaurant(restaurant, map) {
 
     const marker = new L.marker([restaurant.latlng.lat, restaurant.latlng.lng],
-																{title: restaurant.name,
-																 alt: restaurant.name,
-																 url: DBHelper.urlForRestaurant(restaurant)
-																});
+				{title: restaurant.name,
+				 alt: restaurant.name,
+				 url: DBHelper.urlForRestaurant(restaurant)
+				});
     marker.addTo(newMap);
     return marker;
-	}
+  }
+
+  static init() {
+
+    // register service worker
+    if(navigator.serviceWorker) {
+
+      navigator.serviceWorker.register('sw.js').then(() => {
+	console.log('Service worker registered successfully');
+      }).catch(() => {
+	console.log('Service worker could not register');
+      })
+    }
+
+    // provide functionality for skip to content link
+    const mainContent = document.getElementById('content-start');
+
+    document.getElementById('skip-content').addEventListener('click', (e) => {
+      e.preventDefault();
+
+      mainContent.setAttribute('tabindex', '1');
+      mainContent.focus();
+      mainContent.removeAttribute('tabindex');
+    });
+  }
 }

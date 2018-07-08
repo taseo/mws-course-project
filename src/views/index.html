@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Restaurant Reviews</title>
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin=""/>
+  </head>
+
+  <body class="grid content-between">
+
+    <!-- wrapper ensures that footer always gets pushed to the bottom -->
+
+    <div>
+      <header>
+	<nav>
+	  <h1 class="fixed z-10 w--100 h-80 flex items-center justify-center center f-5 fw-3 bg-dark">
+	    <a href="/" class="gutter white no-underline uppercase ls-10">Restaurant Reviews</a>
+	  </h1>
+
+	  <a href="#content-start" id="skip-content" class="z-10 white no-underline show-on-focus">Skip to content</a>
+	</nav>
+      </header>
+
+      <section class="mt-80">
+	<h2 id="map-description" class="dn">Map with displayed addresses for reviewed restaurants</h2>
+	<div id="map" class="shadow-light" role="application" aria-describedby="map-description"></div>
+      </section>
+
+      <main class="container">
+	<div id="content-start" class="absolute"></div>
+
+	<div class="gutter">
+	  <form class="m-medium--v flex wrap justify-end">
+            <h2 class="mb-normal w--100 blue-gray f-5 fw-4 ls-1 uppercase lh-1 right">Filter results</h2>
+
+	    <label class="w--100 dib f-2 right filter-label">Neighborhood
+              <select id="neighborhoods-select"
+		      class="w--100 mb-normal ml-auto p-small--h b-1 b-r3 f-3 black filter js-update-restaurants"
+		      name="neighborhoods">
+		<option value="all">All Neighborhoods</option>
+              </select>
+	    </label>
+
+	    <label class="ml-normal w--100 dib f-2 right filter-label">Cuisine
+	      <select id="cuisines-select"
+		      class="w--100 b-1 b-r3 f-3 p-small--h black filter js-update-restaurants"
+		      name="cuisines">
+		<option value="all">All Cuisines</option>
+              </select>
+	    </label>
+	  </form>
+
+	  <ul id="restaurants-list" class="grid grid-gap-normal col-2-m col-3-l"></ul>
+	</div>
+      </main>
+    </div>
+
+    <footer class="p-medium--v bg-dark">
+      <p class="gutter uppercase white f-1 center ls-1 lh-2">
+	Copyright (c) 2017 <a href="/" class="no-underline orange fw-7">Restaurant Reviews</a> All Rights Reserved
+      </p>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js" integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==" crossorigin=""></script>
+    <script src="index.js"></script>
+  </body>
+</html>
