@@ -2,8 +2,9 @@
 
 ### How to run
 
+- clone and run [development server](https://github.com/udacity/mws-restaurant-stage-2)
 - install dependencies using `npm i` command
-- use `npm start` command to run it on `http://localhost:8000`
+- use `npm start` command to run application on `http://localhost:8000`
 
 ### About
 
