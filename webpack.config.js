@@ -56,10 +56,7 @@ module.exports = {
     ]
   },
   devServer: {
-    contentBase: [
-      path.join(__dirname, 'dist'),
-      path.join(__dirname, 'data')
-    ],
+    contentBase: path.join(__dirname, 'dist'),
     compress: true,
     watchContentBase: true,
     stats: 'errors-only',
