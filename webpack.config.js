@@ -39,6 +39,10 @@ module.exports = {
       {
 	from: path.join(__dirname, './src/img'),
 	to: 'img'
+      },
+      {
+	from: path.join(__dirname, './src/manifest.webmanifest'),
+	to: ''
       }
     ]),
     ...templates.map((template) => createTemplate(template))

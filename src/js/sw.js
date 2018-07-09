@@ -11,7 +11,8 @@ self.addEventListener('install', (event) => {
 	'/restaurant.html',
 	'/main.css',
 	'/index.js',
-	'/restaurant.js'
+	'/restaurant.js',
+	'/manifest.webmanifest'
       ]);
     })
   );
