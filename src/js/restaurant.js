@@ -1,7 +1,7 @@
 import DBHelper from './partials/utils';
 
 let restaurant;
-var newMap;
+let newMap;
 
 document.addEventListener('DOMContentLoaded', (event) => {
   DBHelper.init();
@@ -17,37 +17,39 @@ let initMap = () => {
       console.error(error);
     } else {
       self.newMap = L.map('map', {
-	center: [restaurant.latlng.lat, restaurant.latlng.lng],
+        center: [restaurant.latlng.lat, restaurant.latlng.lng],
+        scrollWheelZoom: false,
         zoom: 16,
-        scrollWheelZoom: false
       });
 
       L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.jpg70?access_token={mapboxToken}', {
-	mapboxToken: 'pk.eyJ1IjoidGFzZW8iLCJhIjoiY2ppa3FlOXJjMTU4NTNrcGNsZnJyNzd0ciJ9.U5bH0axIXMG6gsMVXf8sjA',
-	maxZoom: 18,
-	attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-		     '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-		     'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-	id: 'mapbox.streets'
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+                     '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                     'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        id: 'mapbox.streets',
+        mapboxToken: 'pk.eyJ1IjoidGFzZW8iLCJhIjoiY2ppa3FlOXJjMTU4NTNrcGNsZnJyNzd0ciJ9.U5bH0axIXMG6gsMVXf8sjA',
+        maxZoom: 18,
       }).addTo(self.newMap);
 
       fillBreadcrumb();
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.newMap);
     }
   });
-}
+};
 
 /**
  * Get current restaurant from page URL.
  */
 let fetchRestaurantFromURL = (callback) => {
   if (self.restaurant) { // restaurant already fetched!
-    callback(null, self.restaurant)
+    callback(null, self.restaurant);
     return;
   }
+
   const id = getParameterByName('id');
+
   if (!id) { // no id found in URL
-    error = 'No restaurant id in URL'
+    error = 'No restaurant id in URL';
     callback(error, null);
   } else {
     DBHelper.fetchRestaurants((error, restaurant) => {
@@ -60,7 +62,7 @@ let fetchRestaurantFromURL = (callback) => {
       callback(null, restaurant);
     }, id);
   }
-}
+};
 
 /**
  * Create restaurant HTML and add it to the webpage
@@ -97,9 +99,10 @@ let fillRestaurantHTML = (restaurant = self.restaurant) => {
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
   }
+
   // fill reviews
   fillReviewsHTML();
-}
+};
 
 /**
  * Create restaurant operating hours HTML table and add it to the webpage.
@@ -122,7 +125,7 @@ let fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours)
 
     hours.appendChild(row);
   }
-}
+};
 
 /**
  * Create all reviews HTML and add them to the webpage.
@@ -145,7 +148,7 @@ let fillReviewsHTML = (reviews = self.restaurant.reviews) => {
     ul.appendChild(createReviewHTML(review));
   });
   container.appendChild(ul);
-}
+};
 
 /**
  * Create review HTML and add it to the webpage.
@@ -183,31 +186,38 @@ let createReviewHTML = (review) => {
   wrap.appendChild(comments);
 
   return li;
-}
+};
 
 /**
  * Add restaurant name to the breadcrumb navigation menu
  */
-let fillBreadcrumb = (restaurant=self.restaurant) => {
+let fillBreadcrumb = (restaurant = self.restaurant) => {
   const breadcrumb = document.getElementById('breadcrumb');
   const li = document.createElement('li');
   li.classList.add('dib', 'lh-1', 'breadcrumb-divider');
   li.innerHTML = restaurant.name;
   breadcrumb.appendChild(li);
-}
+};
 
 /**
  * Get a parameter by name from page URL.
  */
 let getParameterByName = (name, url) => {
-  if (!url)
+
+  if (!url) {
     url = window.location.href;
-  name = name.replace(/[\[\]]/g, '\\$&');
-  const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`),
-	results = regex.exec(url);
-  if (!results)
+    name = name.replace(/[\[\]]/g, '\\$&');
+  }
+  const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`);
+  const results = regex.exec(url);
+
+  if (!results) {
     return null;
-  if (!results[2])
+  }
+
+  if (!results[2]) {
     return '';
+  }
+
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
-}
+};

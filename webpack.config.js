@@ -4,20 +4,20 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-const templates = ['index', 'restaurant']
+const templates = ['index', 'restaurant'];
 
 const createTemplate = function(template) {
   return new HtmlWebpackPlugin({
     filename: `${template}.html`,
-    template: `src/views/${template}.html`,
+    inject: false,
     minify: {
-      removeComments: true,
       collapseWhitespace: true,
-      conservativeCollapse: true
+      conservativeCollapse: true,
+      removeComments: true
     },
-    inject: false
-  })
-}
+    template: `src/views/${template}.html`,
+  });
+};
 
 module.exports = {
   entry: {
@@ -37,12 +37,12 @@ module.exports = {
     }),
     new CopyWebpackPlugin([
       {
-	from: path.join(__dirname, './src/img'),
-	to: 'img'
+        from: path.join(__dirname, './src/img'),
+        to: 'img'
       },
       {
-	from: path.join(__dirname, './src/manifest.webmanifest'),
-	to: ''
+        from: path.join(__dirname, './src/manifest.webmanifest'),
+        to: ''
       }
     ]),
     ...templates.map((template) => createTemplate(template))
@@ -60,11 +60,11 @@ module.exports = {
     ]
   },
   devServer: {
-    contentBase: path.join(__dirname, 'dist'),
     compress: true,
-    watchContentBase: true,
+    contentBase: path.join(__dirname, 'dist'),
+    port: 8000,
     stats: 'errors-only',
-    port: 8000
+    watchContentBase: true
   },
   mode: 'production'
 };

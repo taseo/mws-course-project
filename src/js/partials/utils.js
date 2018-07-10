@@ -1,4 +1,4 @@
-import IDBHelper from './idb-helper'
+import IDBHelper from './idb-helper';
 
 /**
  * Common database helper functions.
@@ -8,28 +8,28 @@ export default class DBHelper {
   // fetch all restaurants
   static fetchRestaurants(callback, id = null) {
 
-    let url = 'http://localhost:1337/restaurants'
+    let url = 'http://localhost:1337/restaurants';
 
-    if(id) {
-      url += `/${id}`
+    if (id) {
+      url += `/${id}`;
     }
 
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
-	IDBHelper.storeInIDB(this.dbPromise, data);
-	callback(null, data)
+        IDBHelper.storeInIDB(this.dbPromise, data);
+        callback(null, data);
       }).catch((error) => {
 
-	// attempt to retrieve cached restaurants
-	IDBHelper.getCachedRestaurants(this.dbPromise, id).then((data) => {
+        // attempt to retrieve cached restaurants
+        IDBHelper.getCachedRestaurants(this.dbPromise, id).then((data) => {
 
-	  if(data) {
-	    callback(null, data);
-	  } else {
-	    callback(error, null);
-	  }
-	})
+          if (data) {
+            callback(null, data);
+          } else {
+            callback(error, null);
+          }
+        });
       });
   }
 
@@ -40,11 +40,11 @@ export default class DBHelper {
     // Fetch all restaurants  with proper error handling
     DBHelper.fetchRestaurants((error, restaurants) => {
       if (error) {
-	callback(error, null);
+        callback(error, null);
       } else {
-	// Filter restaurants to have only given cuisine type
-	const results = restaurants.filter(r => r.cuisine_type == cuisine);
-	callback(null, results);
+        // Filter restaurants to have only given cuisine type
+        const results = restaurants.filter(r => r.cuisine_type === cuisine);
+        callback(null, results);
       }
     });
   }
@@ -56,11 +56,11 @@ export default class DBHelper {
     // Fetch all restaurants
     DBHelper.fetchRestaurants((error, restaurants) => {
       if (error) {
-	callback(error, null);
+        callback(error, null);
       } else {
-	// Filter restaurants to have only given neighborhood
-	const results = restaurants.filter(r => r.neighborhood == neighborhood);
-	callback(null, results);
+        // Filter restaurants to have only given neighborhood
+        const results = restaurants.filter(r => r.neighborhood === neighborhood);
+        callback(null, results);
       }
     });
   }
@@ -72,16 +72,16 @@ export default class DBHelper {
     // Fetch all restaurants
     DBHelper.fetchRestaurants((error, restaurants) => {
       if (error) {
-	callback(error, null);
+        callback(error, null);
       } else {
-	let results = restaurants
-	if (cuisine != 'all') { // filter by cuisine
-          results = results.filter(r => r.cuisine_type == cuisine);
-	}
-	if (neighborhood != 'all') { // filter by neighborhood
-          results = results.filter(r => r.neighborhood == neighborhood);
-	}
-	callback(null, results);
+        let results = restaurants;
+        if (cuisine !== 'all') { // filter by cuisine
+          results = results.filter(r => r.cuisine_type === cuisine);
+        }
+        if (neighborhood !== 'all') { // filter by neighborhood
+          results = results.filter(r => r.neighborhood === neighborhood);
+        }
+        callback(null, results);
       }
     });
   }
@@ -93,13 +93,13 @@ export default class DBHelper {
     // Fetch all restaurants
     DBHelper.fetchRestaurants((error, restaurants) => {
       if (error) {
-	callback(error, null);
+        callback(error, null);
       } else {
-	// Get all neighborhoods from all restaurants
-	const neighborhoods = restaurants.map((v, i) => restaurants[i].neighborhood)
-	// Remove duplicates from neighborhoods
-	const uniqueNeighborhoods = neighborhoods.filter((v, i) => neighborhoods.indexOf(v) == i)
-	callback(null, uniqueNeighborhoods);
+        // Get all neighborhoods from all restaurants
+        const neighborhoods = restaurants.map((v, i) => restaurants[i].neighborhood);
+        // Remove duplicates from neighborhoods
+        const uniqueNeighborhoods = neighborhoods.filter((v, i) => neighborhoods.indexOf(v) === i);
+        callback(null, uniqueNeighborhoods);
       }
     });
   }
@@ -111,13 +111,13 @@ export default class DBHelper {
     // Fetch all restaurants
     DBHelper.fetchRestaurants((error, restaurants) => {
       if (error) {
-	callback(error, null);
+        callback(error, null);
       } else {
-	// Get all cuisines from all restaurants
-	const cuisines = restaurants.map((v, i) => restaurants[i].cuisine_type)
-	// Remove duplicates from cuisines
-	const uniqueCuisines = cuisines.filter((v, i) => cuisines.indexOf(v) == i)
-	callback(null, uniqueCuisines);
+        // Get all cuisines from all restaurants
+        const cuisines = restaurants.map((v, i) => restaurants[i].cuisine_type);
+        // Remove duplicates from cuisines
+        const uniqueCuisines = cuisines.filter((v, i) => cuisines.indexOf(v) === i);
+        callback(null, uniqueCuisines);
       }
     });
   }
@@ -141,11 +141,15 @@ export default class DBHelper {
    */
   static mapMarkerForRestaurant(restaurant, map) {
 
-    const marker = new L.marker([restaurant.latlng.lat, restaurant.latlng.lng],
-				{title: restaurant.name,
-				 alt: restaurant.name,
-				 url: DBHelper.urlForRestaurant(restaurant)
-				});
+    const marker = new L.marker(
+      [restaurant.latlng.lat, restaurant.latlng.lng],
+      {
+        alt: restaurant.name,
+        title: restaurant.name,
+        url: DBHelper.urlForRestaurant(restaurant)
+      }
+    );
+
     marker.addTo(newMap);
     return marker;
   }
@@ -153,13 +157,13 @@ export default class DBHelper {
   static init() {
 
     // register service worker
-    if(navigator.serviceWorker) {
+    if (navigator.serviceWorker) {
 
       navigator.serviceWorker.register('sw.js').then(() => {
-	console.log('Service worker registered successfully');
+        console.log('Service worker registered successfully');
       }).catch(() => {
-	console.log('Service worker could not register');
-      })
+        console.log('Service worker could not register');
+      });
     }
 
     // init IndexedDB database

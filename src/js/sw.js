@@ -7,12 +7,12 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(staticCache).then((cache) => {
       return cache.addAll([
-	'/',
-	'/restaurant.html',
-	'/main.css',
-	'/index.js',
-	'/restaurant.js',
-	'/manifest.webmanifest'
+        '/',
+        '/restaurant.html',
+        '/main.css',
+        '/index.js',
+        '/restaurant.js',
+        '/manifest.webmanifest'
       ]);
     })
   );
@@ -25,11 +25,11 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
       return Promise.all(
- 	keys.filter((key) => {
- 	  return key !== staticCache;
- 	}).map((key) => {
- 	  return caches.delete(key);
- 	})
+        keys.filter((key) => {
+          return key !== staticCache;
+        }).map((key) => {
+          return caches.delete(key);
+        })
       );
     })
   );
@@ -39,18 +39,18 @@ self.addEventListener('fetch', (event) => {
 
   const requestUrl = new URL(event.request.url);
 
-  if(requestUrl.origin === location.origin) {
+  if (requestUrl.origin === location.origin) {
 
     // respond with cached restaurant overview page
 
-    if(requestUrl.pathname === '/restaurant.html') {
-      event.respondWith(caches.match('/restaurant.html'))
+    if (requestUrl.pathname === '/restaurant.html') {
+      event.respondWith(caches.match('/restaurant.html'));
       return;
     }
   }
 
   // do not store api requests in cache storage (stored in IDB)
-  if(requestUrl.pathname.startsWith('/restaurants')) {
+  if (requestUrl.pathname.startsWith('/restaurants')) {
     event.respondWith(fetch(event.request));
     return;
   }
@@ -61,13 +61,13 @@ self.addEventListener('fetch', (event) => {
     caches.open(staticCache).then((cache) => {
       return cache.match(event.request).then((response) => {
 
-	// return cached version or try to fetch and cache the new response
+        // return cached version or try to fetch and cache the new response
 
- 	return response || fetch(event.request).then((response) => {
-	  cache.put(event.request, response.clone());
- 	  return response;
- 	})
-      })
+        return response || fetch(event.request).then((networkResponse) => {
+          cache.put(event.request, networkResponse.clone());
+          return networkResponse;
+        });
+      });
     }).catch((error) => {
       console.log(error);
     })
