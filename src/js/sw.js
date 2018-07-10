@@ -49,6 +49,12 @@ self.addEventListener('fetch', (event) => {
     }
   }
 
+  // do not store api requests in cache storage (stored in IDB)
+  if(requestUrl.pathname.startsWith('/restaurants')) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+
   // attempt to respond with cached version
 
   event.respondWith(

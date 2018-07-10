@@ -1,3 +1,5 @@
+import IDBHelper from './idb-helper'
+
 /**
  * Common database helper functions.
  */
@@ -8,16 +10,26 @@ export default class DBHelper {
 
     let url = 'http://localhost:1337/restaurants'
 
-    if (id) {
+    if(id) {
       url += `/${id}`
     }
 
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
+	IDBHelper.storeInIDB(this.dbPromise, data);
 	callback(null, data)
       }).catch((error) => {
-	callback(error, null);
+
+	// attempt to retrieve cached restaurants
+	IDBHelper.getCachedRestaurants(this.dbPromise, id).then((data) => {
+
+	  if(data) {
+	    callback(null, data);
+	  } else {
+	    callback(error, null);
+	  }
+	})
       });
   }
 
@@ -28,11 +40,11 @@ export default class DBHelper {
     // Fetch all restaurants  with proper error handling
     DBHelper.fetchRestaurants((error, restaurants) => {
       if (error) {
-        callback(error, null);
+	callback(error, null);
       } else {
-        // Filter restaurants to have only given cuisine type
-        const results = restaurants.filter(r => r.cuisine_type == cuisine);
-        callback(null, results);
+	// Filter restaurants to have only given cuisine type
+	const results = restaurants.filter(r => r.cuisine_type == cuisine);
+	callback(null, results);
       }
     });
   }
@@ -44,11 +56,11 @@ export default class DBHelper {
     // Fetch all restaurants
     DBHelper.fetchRestaurants((error, restaurants) => {
       if (error) {
-        callback(error, null);
+	callback(error, null);
       } else {
-        // Filter restaurants to have only given neighborhood
-        const results = restaurants.filter(r => r.neighborhood == neighborhood);
-        callback(null, results);
+	// Filter restaurants to have only given neighborhood
+	const results = restaurants.filter(r => r.neighborhood == neighborhood);
+	callback(null, results);
       }
     });
   }
@@ -60,16 +72,16 @@ export default class DBHelper {
     // Fetch all restaurants
     DBHelper.fetchRestaurants((error, restaurants) => {
       if (error) {
-        callback(error, null);
+	callback(error, null);
       } else {
-        let results = restaurants
-        if (cuisine != 'all') { // filter by cuisine
+	let results = restaurants
+	if (cuisine != 'all') { // filter by cuisine
           results = results.filter(r => r.cuisine_type == cuisine);
-        }
-        if (neighborhood != 'all') { // filter by neighborhood
+	}
+	if (neighborhood != 'all') { // filter by neighborhood
           results = results.filter(r => r.neighborhood == neighborhood);
-        }
-        callback(null, results);
+	}
+	callback(null, results);
       }
     });
   }
@@ -81,13 +93,13 @@ export default class DBHelper {
     // Fetch all restaurants
     DBHelper.fetchRestaurants((error, restaurants) => {
       if (error) {
-        callback(error, null);
+	callback(error, null);
       } else {
-        // Get all neighborhoods from all restaurants
-        const neighborhoods = restaurants.map((v, i) => restaurants[i].neighborhood)
-        // Remove duplicates from neighborhoods
-        const uniqueNeighborhoods = neighborhoods.filter((v, i) => neighborhoods.indexOf(v) == i)
-        callback(null, uniqueNeighborhoods);
+	// Get all neighborhoods from all restaurants
+	const neighborhoods = restaurants.map((v, i) => restaurants[i].neighborhood)
+	// Remove duplicates from neighborhoods
+	const uniqueNeighborhoods = neighborhoods.filter((v, i) => neighborhoods.indexOf(v) == i)
+	callback(null, uniqueNeighborhoods);
       }
     });
   }
@@ -99,13 +111,13 @@ export default class DBHelper {
     // Fetch all restaurants
     DBHelper.fetchRestaurants((error, restaurants) => {
       if (error) {
-        callback(error, null);
+	callback(error, null);
       } else {
-        // Get all cuisines from all restaurants
-        const cuisines = restaurants.map((v, i) => restaurants[i].cuisine_type)
-        // Remove duplicates from cuisines
-        const uniqueCuisines = cuisines.filter((v, i) => cuisines.indexOf(v) == i)
-        callback(null, uniqueCuisines);
+	// Get all cuisines from all restaurants
+	const cuisines = restaurants.map((v, i) => restaurants[i].cuisine_type)
+	// Remove duplicates from cuisines
+	const uniqueCuisines = cuisines.filter((v, i) => cuisines.indexOf(v) == i)
+	callback(null, uniqueCuisines);
       }
     });
   }
@@ -149,6 +161,9 @@ export default class DBHelper {
 	console.log('Service worker could not register');
       })
     }
+
+    // init IndexedDB database
+    this.dbPromise = IDBHelper.openDatabase();
 
     // provide functionality for skip to content link
     const mainContent = document.getElementById('content-start');
