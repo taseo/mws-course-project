@@ -170,7 +170,7 @@ let createRestaurantHTML = (restaurant) => {
 
   const defaultSource = document.createElement('img');
   defaultSource.setAttribute('src', `img/2x/jpg/${restaurant.id}_2x.jpg`);
-  defaultSource.setAttribute('alt', restaurant.photo_description);
+  defaultSource.setAttribute('alt', `Photo of ${restaurant.name} restaurant`);
   defaultSource.classList.add('b-r20-r3--top', 'flex', 'shadow-dark');
   picture.appendChild(defaultSource);
 
