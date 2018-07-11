@@ -1,4 +1,7 @@
 import DBHelper from './partials/utils';
+import lazyLoadImg from './partials/lazy-img';
+
+import lazyPlaceholders from '../img/lazyPlaceholders';
 
 let restaurants;
 let neighborhoods;
@@ -94,13 +97,13 @@ let initMap = () => {
     maxZoom: 18
   }).addTo(newMap);
 
-  updateRestaurants();
+  updateRestaurants(true);
 };
 
 /**
  * Update page and map for current restaurants.
  */
-let updateRestaurants = () => {
+let updateRestaurants = (initLazy) => {
   const cSelect = document.getElementById('cuisines-select');
   const nSelect = document.getElementById('neighborhoods-select');
 
@@ -116,6 +119,11 @@ let updateRestaurants = () => {
     } else {
       resetRestaurants(restaurants);
       fillRestaurantsHTML();
+
+      // after first call to create restaurants, init lazy load for images
+      if (initLazy) {
+        lazyLoadImg();
+      }
     }
   });
 };
@@ -154,22 +162,24 @@ let fillRestaurantsHTML = (restaurants = self.restaurants) => {
  */
 let createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
-  li.classList.add('m-center', 'card');
+  li.classList.add('m-center', 'card', 'w--100');
 
   const picture = document.createElement('picture');
+  picture.classList.add('lazy');
 
   const webpSource = document.createElement('source');
-  webpSource.setAttribute('srcset', `img/2x/webp/${restaurant.id}_2x.webp 2x, img/1x/webp/${restaurant.id}_1x_normal.webp`);
+  webpSource.setAttribute('data-srcset', `img/2x/webp/${restaurant.id}_2x.webp 2x, img/1x/webp/${restaurant.id}_1x_normal.webp`);
   webpSource.setAttribute('type', 'image/webp');
   picture.appendChild(webpSource);
 
   const jpgSource = document.createElement('source');
-  jpgSource.setAttribute('srcset', `img/2x/jpg/${restaurant.id}_2x.jpg 2x, img/1x/jpg/${restaurant.id}_1x_normal.jpg`);
+  jpgSource.setAttribute('data-srcset', `img/2x/jpg/${restaurant.id}_2x.jpg 2x, img/1x/jpg/${restaurant.id}_1x_normal.jpg`);
   jpgSource.setAttribute('type', 'image/jpg');
   picture.appendChild(jpgSource);
 
   const defaultSource = document.createElement('img');
-  defaultSource.setAttribute('src', `img/2x/jpg/${restaurant.id}_2x.jpg`);
+  defaultSource.setAttribute('data-src', `img/2x/jpg/${restaurant.id}_2x.jpg`);
+  defaultSource.setAttribute('src', lazyPlaceholders[restaurant.id]);
   defaultSource.setAttribute('alt', `Photo of ${restaurant.name} restaurant`);
   defaultSource.classList.add('b-r20-r3--top', 'flex', 'shadow-dark');
   picture.appendChild(defaultSource);

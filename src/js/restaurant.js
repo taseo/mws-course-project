@@ -1,4 +1,7 @@
 import DBHelper from './partials/utils';
+import lazyLoadImg from './partials/lazy-img';
+
+import lazyPlaceholders from '../img/lazyPlaceholders';
 
 let restaurant;
 let newMap;
@@ -75,25 +78,30 @@ let fillRestaurantHTML = (restaurant = self.restaurant) => {
   address.innerHTML = restaurant.address;
 
   const image = document.getElementById('restaurant-picture');
+  image.classList.add('lazy');
 
   const webpSource = document.createElement('source');
-  webpSource.setAttribute('srcset', `img/2x/webp/${restaurant.id}_2x.webp 2x, img/1x/webp/${restaurant.id}_1x_large.webp`);
+  webpSource.setAttribute('data-srcset', `img/2x/webp/${restaurant.id}_2x.webp 2x, img/1x/webp/${restaurant.id}_1x_large.webp`);
   webpSource.setAttribute('type', 'image/webp');
   image.appendChild(webpSource);
 
   const jpgSource = document.createElement('source');
-  jpgSource.setAttribute('srcset', `img/2x/jpg/${restaurant.id}_2x.jpg 2x, img/1x/jpg/${restaurant.id}_1x_large.jpg`);
+  jpgSource.setAttribute('data-srcset', `img/2x/jpg/${restaurant.id}_2x.jpg 2x, img/1x/jpg/${restaurant.id}_1x_large.jpg`);
   jpgSource.setAttribute('type', 'image/jpg');
   image.appendChild(jpgSource);
 
   const defaultSource = document.createElement('img');
-  defaultSource.setAttribute('src', `img/2x/jpg/${restaurant.id}_2x.jpg`);
+  defaultSource.setAttribute('data-src', `img/2x/jpg/${restaurant.id}_2x.jpg`);
+  defaultSource.setAttribute('src', lazyPlaceholders[restaurant.id]);
   defaultSource.setAttribute('alt', `Photo of ${restaurant.name} restaurant`);
   defaultSource.classList.add('b-r20-r3--top', 'flex', 'shadow-dark');
   image.appendChild(defaultSource);
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
+
+  // init lazy load for images
+  lazyLoadImg();
 
   // fill operating hours
   if (restaurant.operating_hours) {
