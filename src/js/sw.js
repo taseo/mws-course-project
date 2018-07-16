@@ -9,7 +9,6 @@ self.addEventListener('install', (event) => {
       return cache.addAll([
         '/',
         '/restaurant.html',
-        '/main.css',
         '/index.js',
         '/restaurant.js',
         '/manifest.webmanifest'
