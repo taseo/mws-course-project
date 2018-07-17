@@ -1,4 +1,4 @@
-import IDBHelper from './idb-helper';
+import IDBModule from './idb-module';
 
 /**
  * Common database helper functions.
@@ -17,12 +17,12 @@ export default class DBHelper {
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
-        IDBHelper.storeInIDB(this.dbPromise, data);
+        IDBModule.storeInIDB(this.dbPromise, data);
         callback(null, data);
       }).catch((error) => {
 
         // attempt to retrieve cached restaurants
-        IDBHelper.getCachedRestaurants(this.dbPromise, id).then((data) => {
+        IDBModule.getCachedRestaurants(this.dbPromise, id).then((data) => {
 
           if (data) {
             callback(null, data);
@@ -167,7 +167,7 @@ export default class DBHelper {
     }
 
     // init IndexedDB database
-    this.dbPromise = IDBHelper.openDatabase();
+    this.dbPromise = IDBModule.openDatabase();
 
     // provide functionality for skip to content link
     const mainContent = document.getElementById('content-start');

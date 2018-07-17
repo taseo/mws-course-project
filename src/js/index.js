@@ -1,8 +1,8 @@
 import '../css/main.css';
 
 import DBHelper from './partials/utils';
-import lazyLoadImg from './partials/lazy-img';
-import loadMap from './partials/load-map';
+import lazyImgModule from './partials/lazy-img-module';
+import mapModule from './partials/map-module';
 
 import lazyPlaceholders from '../img/lazyPlaceholders';
 
@@ -107,7 +107,7 @@ const initMap = () => {
 /**
  * Update page and map for current restaurants.
  */
-const updateRestaurants = (initLazy) => {
+const updateRestaurants = () => {
   const cSelect = document.getElementById('cuisines-select');
   const nSelect = document.getElementById('neighborhoods-select');
 
@@ -124,10 +124,10 @@ const updateRestaurants = (initLazy) => {
       resetRestaurants(restaurants);
       fillRestaurantsHTML();
 
-      lazyLoadImg();
+      lazyImgModule.init();
 
       if (!window.L) {
-        loadMap(initMap);
+        mapModule.loadMap(initMap);
       }
     }
   });

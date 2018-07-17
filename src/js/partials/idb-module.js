@@ -1,8 +1,10 @@
 import idb from 'idb';
 
-export default class IDBHelper {
+const IDBModule = (function() {
 
-  static openDatabase() {
+  const keyVal = 'restaurants';
+
+  const openDatabase = () => {
 
     // if browser does not support service worker, return
     if (!navigator.serviceWorker) {
@@ -10,11 +12,11 @@ export default class IDBHelper {
     }
 
     return idb.open('main', 1, (upgradeDB) => {
-      const store = upgradeDB.createObjectStore('restaurants', {keyPath: 'id'});
+      const store = upgradeDB.createObjectStore(keyVal, {keyPath: 'id'});
     });
-  }
+  };
 
-  static storeInIDB(database, data) {
+  const storeInIDB = (database, data) => {
 
     database.then((db) => {
 
@@ -22,7 +24,7 @@ export default class IDBHelper {
         return;
       }
 
-      const store = db.transaction('restaurants', 'readwrite').objectStore('restaurants');
+      const store = db.transaction(keyVal, 'readwrite').objectStore(keyVal);
 
       // restaurant retrieved by ID is not stored in array
       if (Array.isArray(data)) {
@@ -33,9 +35,9 @@ export default class IDBHelper {
         store.put(data);
       }
     });
-  }
+  };
 
-  static getCachedRestaurants(database, id) {
+  const getCachedRestaurants = (database, id) => {
 
     return database.then((db) => {
 
@@ -43,7 +45,7 @@ export default class IDBHelper {
         return;
       }
 
-      const store = db.transaction('restaurants').objectStore('restaurants');
+      const store = db.transaction(keyVal).objectStore(keyVal);
 
       if (id) {
         // id that gets retrieved from URL is string
@@ -52,5 +54,14 @@ export default class IDBHelper {
 
       return store.getAll();
     });
-  }
-}
+  };
+
+  return {
+    openDatabase,
+    storeInIDB,
+    getCachedRestaurants
+  };
+
+}());
+
+export default IDBModule;

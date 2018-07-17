@@ -1,8 +1,8 @@
 import '../css/main.css';
 
 import DBHelper from './partials/utils';
-import lazyLoadImg from './partials/lazy-img';
-import loadMap from './partials/load-map';
+import lazyImgModule from './partials/lazy-img-module';
+import mapModule from './partials/map-module';
 
 import lazyPlaceholders from '../img/lazyPlaceholders';
 
@@ -23,7 +23,7 @@ const initMap = () => {
       console.error(error);
     } else {
 
-      loadMap(() => {
+      mapModule.loadMap(() => {
         self.newMap = L.map('map', {
           center: [restaurant.latlng.lat, restaurant.latlng.lng],
           scrollWheelZoom: false,
@@ -108,7 +108,7 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
   cuisine.innerHTML = restaurant.cuisine_type;
 
   // init lazy load for images
-  lazyLoadImg();
+  lazyImgModule.init();
 
   // fill operating hours
   if (restaurant.operating_hours) {

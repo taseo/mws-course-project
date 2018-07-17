@@ -3,8 +3,9 @@
  * it looks for containers with class lazy and checks whether those elements are inside viewport
  * when true, it replaces srcset and src data attributes on their children nodes with respective source attributes
  */
-export default function() {
-  let lazyImages = [].slice.call(document.querySelectorAll('.lazy'));
+const lazyImgModule = (function() {
+
+  let lazyImages;
   let isActive = false;
 
   const lazyLoad = () => {
@@ -47,10 +48,19 @@ export default function() {
     }
   };
 
-  document.addEventListener('scroll', lazyLoad);
-  window.addEventListener('resize', lazyLoad);
-  window.addEventListener('orientationchange', lazyLoad);
+  return {
+    init: () => {
+      lazyImages = [].slice.call(document.querySelectorAll('.lazy'));
 
-  // trigger lazy load on init
-  lazyLoad();
-}
+      document.addEventListener('scroll', lazyLoad);
+      window.addEventListener('resize', lazyLoad);
+      window.addEventListener('orientationchange', lazyLoad);
+
+      // trigger lazy load on init
+      lazyLoad();
+    }
+  };
+
+}());
+
+export default lazyImgModule;
