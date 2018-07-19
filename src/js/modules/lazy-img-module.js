@@ -48,17 +48,19 @@ const lazyImgModule = (function() {
     }
   };
 
+  const init = () => {
+    lazyImages = [].slice.call(document.querySelectorAll('.lazy'));
+
+    document.addEventListener('scroll', lazyLoad);
+    window.addEventListener('resize', lazyLoad);
+    window.addEventListener('orientationchange', lazyLoad);
+
+    // trigger lazy load on init
+    lazyLoad();
+  };
+
   return {
-    init: () => {
-      lazyImages = [].slice.call(document.querySelectorAll('.lazy'));
-
-      document.addEventListener('scroll', lazyLoad);
-      window.addEventListener('resize', lazyLoad);
-      window.addEventListener('orientationchange', lazyLoad);
-
-      // trigger lazy load on init
-      lazyLoad();
-    }
+    init
   };
 
 }());

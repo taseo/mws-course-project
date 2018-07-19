@@ -1,8 +1,9 @@
 import '../css/main.css';
 
-import DBHelper from './partials/utils';
-import lazyImgModule from './partials/lazy-img-module';
-import mapModule from './partials/map-module';
+import DBHelper from './modules/utils';
+import lazyImgModule from './modules/lazy-img-module';
+import mapModule from './modules/map-module';
+import favoriteBtnModule from './modules/favorite-btn-module';
 
 import lazyPlaceholders from '../img/lazyPlaceholders';
 
@@ -114,6 +115,12 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
   }
+
+  const controlArea = document.createElement('div');
+  controlArea.classList.add('flex', 'mt-large');
+
+  controlArea.append(favoriteBtnModule.createBtn(restaurant));
+  document.getElementById('about-restaurant').append(controlArea);
 
   // fill reviews
   fillReviewsHTML();

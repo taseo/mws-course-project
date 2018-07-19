@@ -34,6 +34,8 @@ const IDBModule = (function() {
       } else {
         store.put(data);
       }
+
+      return store.complete;
     });
   };
 

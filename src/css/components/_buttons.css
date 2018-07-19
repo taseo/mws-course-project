@@ -2,7 +2,6 @@
 
 
 .btn-more {
-  bottom: 2rem;
   padding: 0.8rem 2rem;
   transition: color 100ms, background-color 100ms;
 }
@@ -23,4 +22,37 @@
 
 .btn-more:active {
   background-color: var(--teal--700);
+}
+
+
+.favorite-btn,
+.favorite-btn-wrap {
+  width: 40px;
+  height: 37px;
+}
+
+
+.favorite-btn-wrap {
+  margin-left: auto;
+}
+
+
+.favorite-btn {
+  width: 40px;
+  height: 37px;
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAzMiAyOS42Ij4gIDxwYXRoIGZpbGw9IiNCREJEQkQiIGQ9Ik0yMy42LDBjLTMuNCwwLTYuMywyLjctNy42LDUuNkMxNC43LDIuNywxMS44LDAsOC40LDBDMy44LDAsMCwzLjgsMCw4LjRjMCw5LjQsOS41LDExLjksMTYsMjEuMiBjNi4xLTkuMywxNi0xMi4xLDE2LTIxLjJDMzIsMy44LDI4LjIsMCwyMy42LDB6Ii8+PC9zdmc+);
+  opacity: 0.8;
+  cursor: pointer;
+  transition: opacity .1s;
+}
+
+
+.favorite-btn:hover,
+.favorite-btn:focus {
+  opacity: 1;
+}
+
+
+.favorite-btn.favorited {
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAzMiAyOS42Ij4gIDxwYXRoIGZpbGw9IiNFRjUzNTAiIGQ9Ik0yMy42LDBjLTMuNCwwLTYuMywyLjctNy42LDUuNkMxNC43LDIuNywxMS44LDAsOC40LDBDMy44LDAsMCwzLjgsMCw4LjRjMCw5LjQsOS41LDExLjksMTYsMjEuMiBjNi4xLTkuMywxNi0xMi4xLDE2LTIxLjJDMzIsMy44LDI4LjIsMCwyMy42LDB6Ii8+PC9zdmc+);
 }

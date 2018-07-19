@@ -20,3 +20,10 @@
   padding: 0;
   border: none;
 }
+
+
+.control-area {
+  right: 1.4rem;
+  bottom: 2rem;
+  left: 1.4rem;
+}

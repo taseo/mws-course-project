@@ -1,8 +1,9 @@
 import '../css/main.css';
 
-import DBHelper from './partials/utils';
-import lazyImgModule from './partials/lazy-img-module';
-import mapModule from './partials/map-module';
+import DBHelper from './modules/utils';
+import lazyImgModule from './modules/lazy-img-module';
+import mapModule from './modules/map-module';
+import favoriteBtnModule from './modules/favorite-btn-module';
 
 import lazyPlaceholders from '../img/lazyPlaceholders';
 
@@ -166,7 +167,7 @@ const fillRestaurantsHTML = (restaurants = self.restaurants) => {
  */
 const createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
-  li.classList.add('m-center', 'card', 'w--100');
+  li.classList.add('relative', 'm-center', 'card', 'w--100');
 
   const picture = document.createElement('picture');
   picture.classList.add('lazy');
@@ -207,11 +208,18 @@ const createRestaurantHTML = (restaurant) => {
   address.innerHTML = restaurant.address;
   wrap.append(address);
 
-  const more = document.createElement('a');
-  more.innerHTML = 'View Details';
-  more.href = DBHelper.urlForRestaurant(restaurant);
-  more.classList.add('absolute', 'mt-large', 'b-1', 'b-r5', 'dib', 'teal', 'no-underline', 'uppercase', 'btn-more');
-  wrap.append(more);
+  const controlArea = document.createElement('div');
+  controlArea.classList.add('absolute', 'mt-large', 'flex', 'items-center', 'justify-between', 'control-area');
+
+  const moreLnk = document.createElement('a');
+  moreLnk.innerHTML = 'View Details';
+  moreLnk.href = DBHelper.urlForRestaurant(restaurant);
+  moreLnk.classList.add('b-1', 'b-r5', 'dib', 'teal', 'no-underline', 'uppercase', 'btn-more');
+
+  controlArea.append(moreLnk);
+  controlArea.append(favoriteBtnModule.createBtn(restaurant));
+
+  wrap.append(controlArea);
 
   return li;
 };
