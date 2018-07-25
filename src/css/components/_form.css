@@ -1,0 +1,64 @@
+/* review form component */
+
+
+.form-textarea {
+  min-height: 160px;
+  resize: vertical;
+}
+
+
+.form-error {
+  right: 2rem;
+  left: 2rem;
+  padding: 0.2rem 0;
+}
+
+
+.response {
+  padding: .75rem 1.25rem;
+}
+
+
+.response-success {
+  background-color: var(--green-100);
+  border-color: var(--green-200);
+  color: var(--green-900);
+}
+
+
+.response-update {
+  background-color: var(--cyan-100);
+  border-color: var(--cyan-200);
+  color: var(--cyan-900);
+}
+
+
+.form-input {
+  padding: .375rem .75rem;
+  color: var(--gray-text);
+}
+
+
+.radio-group {
+  padding-top: 0.10rem;
+}
+
+
+.radio-label {
+  padding: 0.8rem;
+  margin: 0.4rem;
+}
+
+
+@media screen and (min-width: 580px) {
+
+
+  .radio-label {
+    margin: 0 0.8rem 0 0;
+  }
+
+
+  .radio-group {
+    justify-content: flex-start;
+  }
+}

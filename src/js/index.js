@@ -1,6 +1,6 @@
 import '../css/main.css';
 
-import DBHelper from './modules/utils';
+import DBUtilsModule from './modules/db-utils-module';
 import lazyImgModule from './modules/lazy-img-module';
 import mapModule from './modules/map-module';
 import favoriteBtnModule from './modules/favorite-btn-module';
@@ -17,7 +17,7 @@ let markers = [];
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
-  DBHelper.init();
+  DBUtilsModule.init();
   updateRestaurants();
   fetchNeighborhoods();
   fetchCuisines();
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
  * Fetch all neighborhoods and set their HTML.
  */
 const fetchNeighborhoods = () => {
-  DBHelper.fetchNeighborhoods((error, neighborhoods) => {
+  DBUtilsModule.fetchNeighborhoods((error, neighborhoods) => {
     if (error) { // Got an error
       console.error(error);
     } else {
@@ -58,7 +58,7 @@ const fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
  * Fetch all cuisines and set their HTML.
  */
 const fetchCuisines = () => {
-  DBHelper.fetchCuisines((error, cuisines) => {
+  DBUtilsModule.fetchCuisines((error, cuisines) => {
     if (error) { // Got an error!
       console.error(error);
     } else {
@@ -118,7 +118,7 @@ const updateRestaurants = () => {
   const cuisine = cSelect[cIndex].value;
   const neighborhood = nSelect[nIndex].value;
 
-  DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
+  DBUtilsModule.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
     if (error) { // Got an error!
       console.error(error);
     } else {
@@ -213,8 +213,8 @@ const createRestaurantHTML = (restaurant) => {
 
   const moreLnk = document.createElement('a');
   moreLnk.innerHTML = 'View Details';
-  moreLnk.href = DBHelper.urlForRestaurant(restaurant);
-  moreLnk.classList.add('b-1', 'b-r5', 'dib', 'teal', 'no-underline', 'uppercase', 'btn-more');
+  moreLnk.href = DBUtilsModule.urlForRestaurant(restaurant);
+  moreLnk.classList.add('b-1', 'b-r5', 'dib', 'teal', 'no-underline', 'uppercase', 'btn', 'btn-more');
 
   controlArea.append(moreLnk);
   controlArea.append(favoriteBtnModule.createBtn(restaurant));
@@ -230,7 +230,7 @@ const createRestaurantHTML = (restaurant) => {
 const addMarkersToMap = (restaurants = self.restaurants) => {
   restaurants.forEach(restaurant => {
     // Add marker to the map
-    const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.newMap);
+    const marker = DBUtilsModule.mapMarkerForRestaurant(restaurant, self.newMap);
     marker.on('click', onClick);
 
     function onClick() {

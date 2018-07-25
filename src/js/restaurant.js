@@ -1,9 +1,11 @@
 import '../css/main.css';
 
-import DBHelper from './modules/utils';
+import DBUtilsModule from './modules/db-utils-module';
 import lazyImgModule from './modules/lazy-img-module';
 import mapModule from './modules/map-module';
 import favoriteBtnModule from './modules/favorite-btn-module';
+import reviewFormModule from './modules/review-form-module';
+import reviewModule from './modules/review-module';
 
 import lazyPlaceholders from '../img/lazyPlaceholders';
 
@@ -11,7 +13,7 @@ let restaurant;
 let newMap;
 
 document.addEventListener('DOMContentLoaded', (event) => {
-  DBHelper.init();
+  DBUtilsModule.init();
   initMap();
 });
 
@@ -40,7 +42,7 @@ const initMap = () => {
           maxZoom: 18,
         }).addTo(self.newMap);
 
-        DBHelper.mapMarkerForRestaurant(self.restaurant, self.newMap);
+        DBUtilsModule.mapMarkerForRestaurant(self.restaurant, self.newMap);
       });
 
       fillBreadcrumb();
@@ -59,11 +61,17 @@ let fetchRestaurantFromURL = (callback) => {
 
   const id = getParameterByName('id');
 
+  // init reviews form
+  reviewFormModule.init('review-form', 'submit-review', 'reviews-list', id);
+
+  // fill reviews
+  DBUtilsModule.fetchReviews(id, fillReviewsHTML);
+
   if (!id) { // no id found in URL
     error = 'No restaurant id in URL';
     callback(error, null);
   } else {
-    DBHelper.fetchRestaurants((error, restaurant) => {
+    DBUtilsModule.fetchRestaurants((error, restaurant) => {
       self.restaurant = restaurant;
       if (!restaurant) {
         console.error(error);
@@ -121,9 +129,6 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   controlArea.append(favoriteBtnModule.createBtn(restaurant));
   document.getElementById('about-restaurant').append(controlArea);
-
-  // fill reviews
-  fillReviewsHTML();
 };
 
 /**
@@ -152,7 +157,7 @@ const fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hour
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-const fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+const fillReviewsHTML = (reviews) => {
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h3');
   title.innerHTML = 'Reviews';
@@ -165,49 +170,14 @@ const fillReviewsHTML = (reviews = self.restaurant.reviews) => {
     container.appendChild(noReviews);
     return;
   }
+
   const ul = document.getElementById('reviews-list');
+
   reviews.forEach(review => {
-    ul.appendChild(createReviewHTML(review));
+    ul.appendChild(reviewModule.createReviewHTML(review));
   });
+
   container.appendChild(ul);
-};
-
-/**
- * Create review HTML and add it to the webpage.
- */
-const createReviewHTML = (review) => {
-  const li = document.createElement('li');
-  li.classList.add('mb-extralarge');
-
-  const titleWrap = document.createElement('span');
-  titleWrap.classList.add('p-large--h', 'p-small--v', 'w--100', 'b-r20-r3--top', 'flex', 'justify-between', 'items-center', 'bg-dark', 'white', 'shadow-dark');
-  li.append(titleWrap);
-
-  const name = document.createElement('p');
-  name.innerHTML = review.name;
-  name.classList.add('fw-7', 'f-4');
-  titleWrap.appendChild(name);
-
-  const date = document.createElement('p');
-  date.innerHTML = review.date;
-  date.classList.add('f-2', 'gray-b8');
-  titleWrap.appendChild(date);
-
-  const wrap = document.createElement('span');
-  wrap.classList.add('pa-medium', 'w--100', 'b-r20-r3--bottom', 'dib', 'bg-white', 'shadow-dark');
-  li.append(wrap);
-
-  const rating = document.createElement('p');
-  rating.innerHTML = `Rating: ${review.rating}`;
-  rating.classList.add('mb-normal', 'p-small--h', 'dib', 'b-1', 'b-r3', 'uppercase', 'fw-7', 'ls-1', 'lh-17');
-  wrap.appendChild(rating);
-
-  const comments = document.createElement('p');
-  comments.innerHTML = review.comments;
-  comments.classList.add('lh-17');
-  wrap.appendChild(comments);
-
-  return li;
 };
 
 /**

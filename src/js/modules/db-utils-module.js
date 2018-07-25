@@ -3,12 +3,14 @@ import IDBModule from './idb-module';
 /**
  * Common database helper functions.
  */
-export default class DBHelper {
+const DBUtilsModule = (function() {
+
+  const apiURL = 'http://localhost:1337/';
 
   // fetch all restaurants
-  static fetchRestaurants(callback, id = null) {
+  const fetchRestaurants = (callback, id = null) => {
 
-    let url = 'http://localhost:1337/restaurants';
+    let url = `${apiURL}restaurants`;
 
     if (id) {
       url += `/${id}`;
@@ -17,28 +19,48 @@ export default class DBHelper {
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
-        IDBModule.storeInIDB(this.dbPromise, data);
+        IDBModule.storeInIDB(data, IDBModule.restaurantKeyVal);
         callback(null, data);
       }).catch((error) => {
 
         // attempt to retrieve cached restaurants
-        IDBModule.getCachedRestaurants(this.dbPromise, id).then((data) => {
-
-          if (data) {
-            callback(null, data);
-          } else {
-            callback(error, null);
-          }
+        IDBModule.getCachedRestaurants(id).then((data) => {
+          callback(null, data);
         });
       });
-  }
+  };
+
+  const fetchReviews = (id, callback) => {
+
+    return fetch(`${apiURL}reviews/?restaurant_id=${id}`)
+      .then((response) => response.json())
+      .then((reviews) => {
+
+        // sort review placing newest at the top
+        reviews = reviews.sort((a, b) => {
+          const dateA = new Date(a.updatedAt);
+          const dateB = new Date(b.updatedAt);
+
+          return dateB.getTime() - dateA.getTime();
+        });
+
+        IDBModule.storeInIDB(reviews, IDBModule.reviewKeyVal);
+        callback(reviews);
+      }).catch((error) => {
+
+        // attempt to retrieve cached reviews
+        IDBModule.getCachedReviews(id).then((reviews) => {
+          callback(reviews);
+        });
+      });
+  };
 
   /**
    * Fetch restaurants by a cuisine type with proper error handling.
    */
-  static fetchRestaurantByCuisine(cuisine, callback) {
+  const fetchRestaurantByCuisine = (cuisine, callback) => {
     // Fetch all restaurants  with proper error handling
-    DBHelper.fetchRestaurants((error, restaurants) => {
+    fetchRestaurants((error, restaurants) => {
       if (error) {
         callback(error, null);
       } else {
@@ -47,14 +69,14 @@ export default class DBHelper {
         callback(null, results);
       }
     });
-  }
+  };
 
   /**
    * Fetch restaurants by a neighborhood with proper error handling.
    */
-  static fetchRestaurantByNeighborhood(neighborhood, callback) {
+  const fetchRestaurantByNeighborhood = (neighborhood, callback) => {
     // Fetch all restaurants
-    DBHelper.fetchRestaurants((error, restaurants) => {
+    fetchRestaurants((error, restaurants) => {
       if (error) {
         callback(error, null);
       } else {
@@ -63,14 +85,14 @@ export default class DBHelper {
         callback(null, results);
       }
     });
-  }
+  };
 
   /**
    * Fetch restaurants by a cuisine and a neighborhood with proper error handling.
    */
-  static fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, callback) {
+  const fetchRestaurantByCuisineAndNeighborhood = (cuisine, neighborhood, callback) => {
     // Fetch all restaurants
-    DBHelper.fetchRestaurants((error, restaurants) => {
+    fetchRestaurants((error, restaurants) => {
       if (error) {
         callback(error, null);
       } else {
@@ -84,14 +106,14 @@ export default class DBHelper {
         callback(null, results);
       }
     });
-  }
+  };
 
   /**
    * Fetch all neighborhoods with proper error handling.
    */
-  static fetchNeighborhoods(callback) {
+  const fetchNeighborhoods = (callback) => {
     // Fetch all restaurants
-    DBHelper.fetchRestaurants((error, restaurants) => {
+    fetchRestaurants((error, restaurants) => {
       if (error) {
         callback(error, null);
       } else {
@@ -102,14 +124,14 @@ export default class DBHelper {
         callback(null, uniqueNeighborhoods);
       }
     });
-  }
+  };
 
   /**
    * Fetch all cuisines with proper error handling.
    */
-  static fetchCuisines(callback) {
+  const fetchCuisines = (callback) => {
     // Fetch all restaurants
-    DBHelper.fetchRestaurants((error, restaurants) => {
+    fetchRestaurants((error, restaurants) => {
       if (error) {
         callback(error, null);
       } else {
@@ -120,41 +142,41 @@ export default class DBHelper {
         callback(null, uniqueCuisines);
       }
     });
-  }
+  };
 
   /**
    * Restaurant page URL.
    */
-  static urlForRestaurant(restaurant) {
+  const urlForRestaurant = (restaurant) => {
     return (`./restaurant.html?id=${restaurant.id}`);
-  }
+  };
 
   /**
    * Restaurant image URL.
    */
-  static imageUrlForRestaurant(restaurant) {
+  const imageUrlForRestaurant = (restaurant) => {
     return (`/img/${restaurant.photograph}`);
-  }
+  };
 
   /**
    * Map marker for a restaurant.
    */
-  static mapMarkerForRestaurant(restaurant, map) {
+  const mapMarkerForRestaurant = (restaurant, map) => {
 
     const marker = new L.marker(
       [restaurant.latlng.lat, restaurant.latlng.lng],
       {
         alt: restaurant.name,
         title: restaurant.name,
-        url: DBHelper.urlForRestaurant(restaurant)
+        url: urlForRestaurant(restaurant)
       }
     );
 
     marker.addTo(newMap);
     return marker;
-  }
+  };
 
-  static init() {
+  const init = () => {
 
     // register service worker
     if (navigator.serviceWorker) {
@@ -166,9 +188,6 @@ export default class DBHelper {
       });
     }
 
-    // init IndexedDB database
-    this.dbPromise = IDBModule.openDatabase();
-
     // provide functionality for skip to content link
     const mainContent = document.getElementById('content-start');
 
@@ -179,5 +198,19 @@ export default class DBHelper {
       mainContent.focus();
       mainContent.removeAttribute('tabindex');
     });
-  }
-}
+  };
+
+  return {
+    fetchRestaurants,
+    fetchReviews,
+    fetchRestaurantByCuisineAndNeighborhood,
+    fetchNeighborhoods,
+    fetchCuisines,
+    urlForRestaurant,
+    mapMarkerForRestaurant,
+    init
+  };
+
+}());
+
+export default DBUtilsModule;

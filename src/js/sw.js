@@ -36,6 +36,11 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
 
+  // ignore other than GET methods
+  if (event.request.method !== 'GET') {
+    return;
+  }
+
   const requestUrl = new URL(event.request.url);
 
   if (requestUrl.origin === location.origin) {
@@ -49,7 +54,7 @@ self.addEventListener('fetch', (event) => {
   }
 
   // do not store api requests in cache storage (stored in IDB)
-  if (requestUrl.pathname.startsWith('/restaurants')) {
+  if (requestUrl.pathname.startsWith('/restaurants') || requestUrl.pathname.startsWith('/reviews')) {
     event.respondWith(fetch(event.request));
     return;
   }

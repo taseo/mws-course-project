@@ -66,7 +66,7 @@ const favoriteBtnModule = (function() {
           liveArea.setAttribute('aria-live', 'polite');
         }
 
-        IDBModule.storeInIDB(IDBModule.openDatabase(), data);
+        IDBModule.storeInIDB(data, IDBModule.restaurantKeyVal);
       });
   };
 

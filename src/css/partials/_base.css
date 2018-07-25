@@ -45,7 +45,8 @@ ul {
 }
 
 
-select {
+select,
+textarea {
   font-family: inherit;
 }
 

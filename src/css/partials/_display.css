@@ -9,3 +9,8 @@
 .dib {
   display: inline-block;
 }
+
+
+.db {
+  display: block;
+}

@@ -26,6 +26,21 @@
 }
 
 
+.b-gray-ce {
+  border-color: var(--gray-ce);
+}
+
+
+.b-red {
+  border-color: var(--red);
+}
+
+
+.b-transparent {
+  border-color: transparent;
+}
+
+
 /* border radius */
 
 
@@ -36,6 +51,11 @@
 
 .b-r5 {
   border-radius: 5px;
+}
+
+
+.b-r-small {
+  border-radius: .25rem;
 }
 
 

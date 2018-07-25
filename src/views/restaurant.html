@@ -44,8 +44,8 @@
     <main class="container">
       <div id="content-start" class="absolute"></div>
 
-      <div class="gutter grid col-2-l col-5-xl grid-gap-normal">
-	<section class="col-span-1-2-xl">
+      <div class="gutter grid col-5-xl grid-gap-normal">
+	<section class="col-span-1-2-xl grid-row-1-3">
 	  <h2 id="restaurant-name" class="m-medium--v uppercase blue-gray fw-3 f-5"></h2>
 
 	  <div class="m-center about-card w--100">
@@ -57,6 +57,83 @@
 	      <table id="restaurant-hours" class="w--100 f-2 gray-6 hours-table"></table>
 	    </div>
 	  </div>
+	</section>
+
+	<section class="col-span-3-5-xl">
+	  <h3 class="m-medium--v blue-gray fw-3 f-5">Add your review</h3>
+
+	  <form id="review-form" class="relative shadow-dark pa-large flex flex-column b-r20-r3--top b-r20-r3--bottom bg-white">
+	    <label for="name" class="f-4">Your name</label>
+	    <div class="pb-large">
+	      <input id="name"
+		     type="text"
+		     class=" w--100 b-r-small b-gray-ce db lh-15 b-1 f-3 form-input"
+		     aria-required="true"
+		     data-key="name">
+	    </div>
+
+	    <div id="rating-title" class="f-4">How would you rate this restaurant?</div>
+
+	    <div class="pb-large flex wrap justify-center radio-group" role="radiogroup" aria-labelledby="rating-title">
+	      <label class="b-1 b-r-small b-gray-ce flex flex-column items-center pointer radio-label">
+		1 star
+		<input type="radio"
+		       class="radio-btn"
+		       name="rating"
+		       value="1"
+		       data-key="rating">
+	      </label>
+
+	      <label class="b-1 b-r-small b-gray-ce flex flex-column items-center pointer radio-label">
+		2 stars
+		<input type="radio"
+		       class="radio-btn"
+		       name="rating"
+		       value="2"
+		       data-key="rating">
+	      </label>
+
+	      <label class="b-1 b-r-small b-gray-ce flex flex-column items-center pointer radio-label">
+		3 stars
+		<input type="radio"
+		       class="radio-btn"
+		       name="rating"
+		       value="3"
+		       data-key="rating">
+	      </label>
+
+	      <label class="b-1 b-r-small b-gray-ce flex flex-column items-center pointer radio-label">
+		4 stars
+		<input type="radio"
+		       class="radio-btn"
+		       name="rating"
+		       value="4"
+		       data-key="rating">
+	      </label>
+
+	      <label class="b-1 b-r-small b-gray-ce flex flex-column items-center pointer radio-label">
+		5 stars
+		<input type="radio"
+		       class="radio-btn"
+		       name="rating"
+		       value="5"
+		       data-key="rating"
+		       checked>
+	      </label>
+	    </div>
+
+	    <label for="comments" class="f-4">Review</label>
+	    <div class="pb-large">
+	      <textarea id="comments"
+			class="w--100 b-1 b-r-small b-gray-ce db f-3  lh-15 form-input form-textarea"
+			aria-required="true"
+			data-key="comments"></textarea>
+	    </div>
+
+	    <button id="submit-review"
+		    type="button"
+		    class="ml-auto b-1 b-r5 b-transparent dib white pointer f-5 uppercase btn btn-form">Submit</button>
+	  </form>
 	</section>
 
 	<section id="reviews-container" class="col-span-3-5-xl">

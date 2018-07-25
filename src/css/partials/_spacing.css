@@ -70,6 +70,16 @@
 }
 
 
+.pa-large {
+  padding: 2rem;
+}
+
+
+.pb-large {
+  padding-bottom: 2rem;
+}
+
+
 .p-small--h {
   padding-right: 0.7rem;
   padding-left: 0.7rem;

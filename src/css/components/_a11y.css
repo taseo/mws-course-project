@@ -22,15 +22,19 @@
 }
 
 
-/* select element focus state */
+/* form elements focus state */
 
 
+input:focus,
+textarea:focus,
 select:focus {
   outline: 0;
   box-shadow: 0 0 0 0 var(--white),0 0 2px 2px var(--teal-30);
 }
 
 
+input:-moz-focusring,
+textarea:-moz-focusring,
 select:-moz-focusring {
   color: transparent;
   text-shadow: 0 0 0 #000;

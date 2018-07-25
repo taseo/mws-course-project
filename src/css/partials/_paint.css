@@ -31,6 +31,11 @@
 }
 
 
+.red {
+  color: var(--red);
+}
+
+
 .blue-gray {
   color: var(--greenblue-gray);
 }
