@@ -75,7 +75,7 @@ const IDBModule = (function() {
       const store = db.transaction(reviewKeyVal).objectStore(reviewKeyVal);
       const index = store.index(reviewsIndex);
 
-      return index.get(parseInt(id, 10));
+      return index.getAll(parseInt(id, 10));
     });
   };
 

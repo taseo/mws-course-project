@@ -1,5 +1,5 @@
 import reviewModule from './review-module';
-import IDBModule from './idb-module';
+import DBUtilsModule from './db-utils-module';
 
 /**
  * utility to operate review form
@@ -149,34 +149,6 @@ const reviewFormModule = (function() {
     // add crated review to the DOM
     newReviewElem = reviewModule.createReviewHTML(review);
     reviewList.prepend(newReviewElem);
-
-    // store posted review in IndexedDB
-    IDBModule.storeInIDB(review, IDBModule.reviewKeyVal);
-  };
-
-  const postReview = () => {
-
-    fetch('http://localhost:1337/reviews/', {
-      method: 'POST',
-      body: JSON.stringify({
-        ...reviewData,
-        restaurant_id: restaurantId
-      })
-    }).then((response) => response.json())
-      .then((review) => {
-        handleSubmit(review, 'Thank you! Your review was submitted', 'response-success');
-      });
-  };
-
-  const updateReview = () => {
-
-    fetch(`http://localhost:1337/reviews/${reviewId}`, {
-      method: 'PUT',
-      body: JSON.stringify(reviewData)
-    }).then((response) => response.json())
-      .then((review) => {
-        handleSubmit(review, 'Thank you! Your review was updated', 'response-update');
-      });
   };
 
   const submit = () => {
@@ -213,9 +185,16 @@ const reviewFormModule = (function() {
       if (errorCount === 0) {
 
         if (reviewId) {
-          updateReview();
+          DBUtilsModule.updateReview(reviewData, reviewId, (review) => {
+            handleSubmit(review, 'Thank you! Your review was updated', 'response-update');
+          });
         } else {
-          postReview();
+          DBUtilsModule.postReview({
+            ...reviewData,
+            restaurant_id: restaurantId
+          }, (review) => {
+            handleSubmit(review, 'Thank you! Your review was submitted', 'response-success');
+          });
         }
       } else {
         isPending = false;

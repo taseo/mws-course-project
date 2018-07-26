@@ -1,4 +1,4 @@
-import IDBModule from './idb-module';
+import DBUtilsModule from './db-utils-module';
 
 // utility to create and operate add/remove restaurant as favorite button
 const favoriteBtnModule = (function() {
@@ -48,26 +48,19 @@ const favoriteBtnModule = (function() {
       setChecked(this);
     }
 
-    fetch(`http://localhost:1337/restaurants/${id}/?is_favorite=${isFavoriteAction}`, {
-      method: 'PUT'
-    }).then((response) => response.json())
-      .then((data) => {
+    DBUtilsModule.favoriteRestaurant(id, isFavoriteAction, (restaurantData) => {
 
-        const liveArea = this.parentNode.childNodes[1];
+      const liveArea = this.parentNode.childNodes[1];
 
-        // announce to screen reader that action was completed
-        if (data.is_favorite === 'true') {
-          setActive(this, restaurantName);
-          liveArea.innerText = `You marked ${restaurantName} restaurant as favorite`;
-          liveArea.setAttribute('aria-live', 'polite');
-        } else {
-          setInactive(this, restaurantName);
-          liveArea.innerText = `You unmarked ${restaurantName} restaurant as favorite`;
-          liveArea.setAttribute('aria-live', 'polite');
-        }
-
-        IDBModule.storeInIDB(data, IDBModule.restaurantKeyVal);
-      });
+      // announce to screen reader that action was completed
+      if (restaurantData.is_favorite === 'true') {
+        setActive(this, restaurantName);
+        liveArea.innerText = `You marked ${restaurantName} restaurant as favorite`;
+      } else {
+        setInactive(this, restaurantName);
+        liveArea.innerText = `You unmarked ${restaurantName} restaurant as favorite`;
+      }
+    });
   };
 
   const createBtn = (restaurant) => {
@@ -77,7 +70,7 @@ const favoriteBtnModule = (function() {
 
     const liveArea = document.createElement('div');
     liveArea.classList.add('sr-only');
-    liveArea.setAttribute('aria-live', 'off');
+    liveArea.setAttribute('aria-live', 'polite');
 
     const favoriteBtn = document.createElement('div');
     favoriteBtn.setAttribute('role', 'checkbox');

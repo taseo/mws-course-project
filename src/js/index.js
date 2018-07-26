@@ -1,5 +1,6 @@
 import '../css/main.css';
 
+import commonModule from './modules/common-module';
 import DBUtilsModule from './modules/db-utils-module';
 import lazyImgModule from './modules/lazy-img-module';
 import mapModule from './modules/map-module';
@@ -17,7 +18,9 @@ let markers = [];
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
-  DBUtilsModule.init();
+  commonModule.initServiceWorker();
+  commonModule.initSkipLink();
+
   updateRestaurants();
   fetchNeighborhoods();
   fetchCuisines();

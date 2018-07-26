@@ -1,5 +1,6 @@
 import '../css/main.css';
 
+import commonModule from './modules/common-module';
 import DBUtilsModule from './modules/db-utils-module';
 import lazyImgModule from './modules/lazy-img-module';
 import mapModule from './modules/map-module';
@@ -13,7 +14,9 @@ let restaurant;
 let newMap;
 
 document.addEventListener('DOMContentLoaded', (event) => {
-  DBUtilsModule.init();
+  commonModule.initServiceWorker();
+  commonModule.initSkipLink();
+
   initMap();
 });
 

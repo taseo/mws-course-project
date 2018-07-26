@@ -176,28 +176,39 @@ const DBUtilsModule = (function() {
     return marker;
   };
 
-  const init = () => {
+  const postReview = (data, callback) => {
 
-    // register service worker
-    if (navigator.serviceWorker) {
-
-      navigator.serviceWorker.register('sw.js').then(() => {
-        console.log('Service worker registered successfully');
-      }).catch(() => {
-        console.log('Service worker could not register');
+    fetch(`${apiURL}reviews`, {
+      method: 'POST',
+      body: JSON.stringify(data)
+    }).then((response) => response.json())
+      .then((review) => {
+        callback(review);
+        IDBModule.storeInIDB(review, IDBModule.reviewKeyVal);
       });
-    }
+  };
 
-    // provide functionality for skip to content link
-    const mainContent = document.getElementById('content-start');
+  const updateReview = (data, reviewId, callback) => {
 
-    document.getElementById('skip-content').addEventListener('click', (e) => {
-      e.preventDefault();
+    fetch(`${apiURL}reviews/${reviewId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    }).then((response) => response.json())
+      .then((review) => {
+        callback(review);
+        IDBModule.storeInIDB(review, IDBModule.reviewKeyVal);
+      });
+  };
 
-      mainContent.setAttribute('tabindex', '1');
-      mainContent.focus();
-      mainContent.removeAttribute('tabindex');
-    });
+  const favoriteRestaurant = (id, isFavoriteAction, callback) => {
+
+    fetch(`${apiURL}restaurants/${id}/?is_favorite=${isFavoriteAction}`, {
+      method: 'PUT'
+    }).then((response) => response.json())
+      .then((restaurantData) => {
+        callback(restaurantData);
+        IDBModule.storeInIDB(restaurantData, IDBModule.restaurantKeyVal);
+      });
   };
 
   return {
@@ -208,7 +219,9 @@ const DBUtilsModule = (function() {
     fetchCuisines,
     urlForRestaurant,
     mapMarkerForRestaurant,
-    init
+    postReview,
+    updateReview,
+    favoriteRestaurant
   };
 
 }());
