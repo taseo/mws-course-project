@@ -1,4 +1,5 @@
 import IDBModule from './idb-module';
+import favoriteBtnModule from './favorite-btn-module';
 
 /**
  * Common database helper functions.
@@ -274,7 +275,7 @@ const DBUtilsModule = (function() {
   // check if we have any offline reviews to be synced in background
   const silentReviewSync = () => {
 
-    IDBModule.getOfflineReviews().then((offlineReviews) => {
+    IDBModule.getUnsyncedData(IDBModule.offlineReviewsKeyVal).then((offlineReviews) => {
 
       if (offlineReviews) {
 
@@ -296,15 +297,81 @@ const DBUtilsModule = (function() {
     });
   };
 
+  // waits for connection and attempts to sync restaurant data
+  const syncRestaurantData = (id, isFavoriteAction, updateDom) => {
+
+    window.addEventListener('online', function _callback() {
+
+      fetch(`${apiURL}restaurants/${id}/?is_favorite=${isFavoriteAction}`, {
+        method: 'PUT'
+      }).then((response) => response.json())
+        .then((restaurantData) => {
+          IDBModule.storeInIDB(restaurantData, IDBModule.restaurantKeyVal);
+          IDBModule.removeFromIDB(restaurantData.id, IDBModule.offlineRestaurantKeyVal);
+
+          window.removeEventListener('online', _callback);
+
+          // change favorite btn DOM element to reflect the correct state
+          if (updateDom) {
+            favoriteBtnModule.updateButton(restaurantData.id, restaurantData.name);
+          }
+        });
+    });
+  };
+
   const favoriteRestaurant = (id, isFavoriteAction, callback) => {
 
-    fetch(`${apiURL}restaurants/${id}/?is_favorite=${isFavoriteAction}`, {
-      method: 'PUT'
-    }).then((response) => response.json())
-      .then((restaurantData) => {
-        callback(restaurantData);
-        IDBModule.storeInIDB(restaurantData, IDBModule.restaurantKeyVal);
+    if (navigator.onLine) {
+
+      fetch(`${apiURL}restaurants/${id}/?is_favorite=${isFavoriteAction}`, {
+        method: 'PUT'
+      }).then((response) => response.json())
+        .then((restaurantData) => {
+          callback(restaurantData);
+          IDBModule.storeInIDB(restaurantData, IDBModule.restaurantKeyVal);
+        });
+    } else {
+
+      // when offline, fetch cached property, mark/unmark it as favorite and attempt to sync when online
+      IDBModule.getCachedRestaurants(id).then((restaurant) => {
+
+        restaurant.is_favorite = isFavoriteAction;
+        callback(restaurant);
+
+        IDBModule.storeInIDB(restaurant, IDBModule.restaurantKeyVal);
+        IDBModule.storeInIDB(restaurant, IDBModule.offlineRestaurantKeyVal);
+
+        syncRestaurantData(id, isFavoriteAction);
       });
+    }
+  };
+
+  // syncs unsaved changes to restaurant data in background
+  const syncOfflineRestaurants = () => {
+
+    IDBModule.getUnsyncedData(IDBModule.offlineRestaurantKeyVal).then((reviews) => {
+
+      reviews.forEach((review) => {
+
+        /**
+         * when online, sync changes and update favorite state in DOM
+         *  otherwise wait for connection to come back online
+         */
+        if (navigator.onLine) {
+          fetch(`${apiURL}restaurants/${review.id}/?is_favorite=${review.is_favorite}`, {
+            method: 'PUT'
+          }).then((response) => response.json())
+            .then((restaurantData) => {
+              IDBModule.storeInIDB(restaurantData, IDBModule.restaurantKeyVal);
+              IDBModule.removeFromIDB(restaurantData.id, IDBModule.offlineRestaurantKeyVal);
+
+              favoriteBtnModule.updateButton(restaurantData.id, restaurantData.name);
+            });
+        } else {
+          syncRestaurantData(id, isFavoriteAction, true);
+        }
+      });
+    });
   };
 
   return {
@@ -317,6 +384,7 @@ const DBUtilsModule = (function() {
     mapMarkerForRestaurant,
     postReview,
     silentReviewSync,
+    syncOfflineRestaurants,
     favoriteRestaurant
   };
 

@@ -29,8 +29,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
     elem.addEventListener('change', updateRestaurants);
   });
 
-  // sync offline reviews in background
+  // sync offline data in background
   DBUtilsModule.silentReviewSync();
+  DBUtilsModule.syncOfflineRestaurants();
 });
 
 /**

@@ -19,6 +19,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
   commonModule.initSkipLink();
 
   initMap();
+
+  // sync offline data in background
+  DBUtilsModule.syncOfflineRestaurants();
 });
 
 /**
@@ -183,7 +186,7 @@ const fillReviewsHTML = (reviews) => {
 
   // add offline reviews to DOM
 
-  IDBModule.getOfflineReviews().then((offlineReviews) => {
+  IDBModule.getUnsyncedData(IDBModule.offlineReviewsKeyVal).then((offlineReviews) => {
 
     if (offlineReviews) {
 

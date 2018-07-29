@@ -28,6 +28,18 @@ const favoriteBtnModule = (function() {
     }
   };
 
+  // updates button state when offline changes were synced
+  const updateButton = (id, restaurantName) => {
+
+    const favoriteBtn = document.getElementById(`favorite-btn-${id}`);
+
+    if (favoriteBtn.classList.contains('favorite')) {
+      setInactive(favoriteBtn, restaurantName);
+    } else {
+      setActive(favoriteBtn, restaurantName);
+    }
+  };
+
   const eventHandler = function(id, restaurantName, event) {
 
     // on keyup event return if other than spacebar was pressed
@@ -73,6 +85,7 @@ const favoriteBtnModule = (function() {
     liveArea.setAttribute('aria-live', 'polite');
 
     const favoriteBtn = document.createElement('div');
+    favoriteBtn.id = `favorite-btn-${restaurant.id}`;
     favoriteBtn.setAttribute('role', 'checkbox');
     favoriteBtn.setAttribute('tabindex', 0);
     favoriteBtn.classList.add('favorite-btn');
@@ -98,7 +111,8 @@ const favoriteBtnModule = (function() {
   };
 
   return {
-    createBtn
+    createBtn,
+    updateButton
   };
 
 }());
