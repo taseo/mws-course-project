@@ -28,6 +28,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
   document.querySelectorAll('.js-update-restaurants').forEach((elem) => {
     elem.addEventListener('change', updateRestaurants);
   });
+
+  // sync offline reviews in background
+  DBUtilsModule.silentReviewSync();
 });
 
 /**

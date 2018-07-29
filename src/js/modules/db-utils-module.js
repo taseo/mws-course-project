@@ -6,6 +6,7 @@ import IDBModule from './idb-module';
 const DBUtilsModule = (function() {
 
   const apiURL = 'http://localhost:1337/';
+  let onlineListenerCallback;
 
   // fetch all restaurants
   const fetchRestaurants = (callback, id = null) => {
@@ -176,28 +177,123 @@ const DBUtilsModule = (function() {
     return marker;
   };
 
-  const postReview = (data, callback) => {
+  const postReview = (data, callback, reviewId, wasOffline) => {
 
-    fetch(`${apiURL}reviews`, {
-      method: 'POST',
-      body: JSON.stringify(data)
+    // check if we have active internet connection
+    if (navigator.onLine) {
+
+      let url = `${apiURL}reviews`;
+      let method = 'POST';
+
+      if (reviewId) {
+        url += `/${reviewId}`;
+        method = 'PUT';
+      }
+
+      fetch(url, {
+        method: method,
+        body: JSON.stringify(data)
+      }).then((response) => response.json())
+        .then((review) => {
+
+          /**
+           * wasOffline flag indicates that we are synced review that previously was offline
+           * calls callback with appropriate message to indicate changes to the user
+           */
+          if (wasOffline) {
+
+            if (method === 'POST') {
+              callback(review, 'Thank you! Your offline review was synchronized', 'response-success', true, data.id);
+            } else {
+              callback(review, 'Thank you! Your offline changes were synchronized', 'response-update', true, data.id);
+            }
+          } else {
+
+            if (method === 'POST') {
+              callback(review, 'Thank you! Your review was submitted', 'response-success');
+            } else {
+              callback(review, 'Thank you! Your review was updated', 'response-update');
+            }
+          }
+
+          IDBModule.storeInIDB(review, IDBModule.reviewKeyVal);
+        });
+    } else {
+
+      const onLineCallback = () => {
+        postReview(data, callback, reviewId, true);
+        window.removeEventListener('online', onLineCallback);
+      };
+
+      // inform user that form submit is not possible as user appears to be offline
+      if (!wasOffline) {
+
+        // generate random ID (to be used to reference entry in offline reviews IDB) when entry does not have it allready
+        data.id = reviewId || 'offline-' + Math.random();
+
+        callback(data, 'It appears you are offline! We will try to re-submit your review as soon as you come back online', 'response-error');
+
+        IDBModule.storeInIDB(data, IDBModule.offlineReviewsKeyVal);
+
+        // when user tried to post review when offline and after that tried to change it, remove previous online event listener
+        if (onlineListenerCallback) {
+          window.removeEventListener('online', onlineListenerCallback);
+        }
+
+        onlineListenerCallback = onLineCallback;
+      }
+
+      // listen of connection to come back online
+      window.addEventListener('online', onLineCallback);
+    }
+  };
+
+  // sync offline review in background
+  const postOfflineReview = (review) => {
+
+    // determine if it should be PUT or POST
+    let url = `${apiURL}reviews`;
+    let method = 'POST';
+
+    if (review.id && typeof review.id === 'number') {
+      url += `/${review.id}`;
+      method = 'PUT';
+    }
+
+    fetch(url, {
+      method: method,
+      body: JSON.stringify(review)
     }).then((response) => response.json())
-      .then((review) => {
-        callback(review);
-        IDBModule.storeInIDB(review, IDBModule.reviewKeyVal);
+      .then((syncedReview) => {
+
+        IDBModule.storeInIDB(syncedReview, IDBModule.reviewKeyVal);
+        IDBModule.removeFromIDB(review.id, IDBModule.offlineReviewsKeyVal);
       });
   };
 
-  const updateReview = (data, reviewId, callback) => {
+  // check if we have any offline reviews to be synced in background
+  const silentReviewSync = () => {
 
-    fetch(`${apiURL}reviews/${reviewId}`, {
-      method: 'PUT',
-      body: JSON.stringify(data)
-    }).then((response) => response.json())
-      .then((review) => {
-        callback(review);
-        IDBModule.storeInIDB(review, IDBModule.reviewKeyVal);
-      });
+    IDBModule.getOfflineReviews().then((offlineReviews) => {
+
+      if (offlineReviews) {
+
+        offlineReviews.forEach((review) => {
+
+          if (navigator.onLine) {
+            postOfflineReview(review);
+          } else {
+
+            // wait for user to come back online and try to re-sync
+            window.addEventListener('online', function _callback() {
+              postOfflineReview(review);
+              window.removeEventListener('online', _callback);
+            });
+          }
+        });
+      }
+
+    });
   };
 
   const favoriteRestaurant = (id, isFavoriteAction, callback) => {
@@ -220,7 +316,7 @@ const DBUtilsModule = (function() {
     urlForRestaurant,
     mapMarkerForRestaurant,
     postReview,
-    updateReview,
+    silentReviewSync,
     favoriteRestaurant
   };
 

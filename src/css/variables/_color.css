@@ -7,7 +7,9 @@
 
   --white: #fff;
   --orange: #f18200;
-  --red:  #b71c1c;
+  --red-100: #ffcdd2;
+  --red-200: #ef9a9a;
+  --red-900: #b71c1c;
   --teal: #006064;
   --teal-30: rgba(0,96, 100, 0.7);
   --teal-700: #00796b;

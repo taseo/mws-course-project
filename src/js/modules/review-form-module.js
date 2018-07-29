@@ -1,5 +1,6 @@
 import reviewModule from './review-module';
 import DBUtilsModule from './db-utils-module';
+import IDBModule from './idb-module';
 
 /**
  * utility to operate review form
@@ -108,47 +109,69 @@ const reviewFormModule = (function() {
     }
   };
 
+  const updateResponseMessage = (messageTxt, messageType) => {
+
+    // cleanup up classes that style response message type
+    responseMessage.classList.remove('response-success', 'response-update', 'response-error');
+    responseMessage.classList.add(messageType);
+    responseMessage.innerText = messageTxt;
+  };
+
   // on post request creates new response message, otherwise updates existing element
-  const createResponseMessage = (messageTxt, type) => {
+  const createResponseMessage = (messageTxt, messageType) => {
 
     if (!responseMessage) {
 
       const message = document.createElement('p');
       message.setAttribute('aria-live', 'polite');
-      message.classList.add('response', 'mt-large', 'b-1', 'b-transparent', 'b-r-small', type);
+      message.classList.add('response', 'mt-large', 'b-1', 'b-transparent', 'b-r-small', messageType);
       message.innerText = messageTxt;
       responseMessage = message;
 
       form.append(message);
     } else {
-
-      // cleanup up classes that style response message type
-      responseMessage.classList.remove('response-success', 'response-update');
-      responseMessage.classList.add(type);
-      responseMessage.innerText = messageTxt;
+      updateResponseMessage(messageTxt, messageType);
     }
   };
 
-  const handleSubmit = (review, message, messageType) => {
+  const handleSubmit = (review, messageTxt, messageType, tobeSynced, offlineId) => {
 
     isPending = false;
 
-    // save review ID for PUT request
-    if (!reviewId) {
+    // save review ID for PUT request and ignore offline IDs (should be string that starts with 'offlie-' prefix)
+    if (!reviewId && typeof review.id === 'number') {
       reviewId = review.id;
     }
 
-    // inform user about changes
-    createResponseMessage(message, messageType);
+    if (!tobeSynced) {
 
-    // remove previous review element if it gets updated
-    if (newReviewElem) {
-      newReviewElem.remove();
+      // inform user about changes
+      createResponseMessage(messageTxt, messageType);
+
+      // remove previous review element if it gets updated
+      if (newReviewElem) {
+        newReviewElem.remove();
+      }
+
+      // add created review to the DOM
+      newReviewElem = reviewModule.createReviewHTML(review);
+      reviewList.prepend(newReviewElem);
+    } else {
+
+      // remove review error (offline warning)
+      const reviewItem = document.getElementById(`review-${offlineId}`);
+
+      reviewItem.querySelector('.review-error').remove();
+      reviewItem.querySelector('.js-review-title').append(reviewModule.createTimestamp(review.updatedAt));
+
+      // remove newly synced review from offline reviews IDB
+      IDBModule.removeFromIDB(offlineId, IDBModule.offlineReviewsKeyVal);
+
+      // update form response message when it exists
+      if (responseMessage) {
+        updateResponseMessage(messageTxt, messageType);
+      }
     }
-
-    // add crated review to the DOM
-    newReviewElem = reviewModule.createReviewHTML(review);
-    reviewList.prepend(newReviewElem);
   };
 
   const submit = () => {
@@ -185,21 +208,24 @@ const reviewFormModule = (function() {
       if (errorCount === 0) {
 
         if (reviewId) {
-          DBUtilsModule.updateReview(reviewData, reviewId, (review) => {
-            handleSubmit(review, 'Thank you! Your review was updated', 'response-update');
-          });
+          DBUtilsModule.postReview(reviewData, handleSubmit, reviewId);
         } else {
           DBUtilsModule.postReview({
             ...reviewData,
             restaurant_id: restaurantId
-          }, (review) => {
-            handleSubmit(review, 'Thank you! Your review was submitted', 'response-success');
-          });
+          }, handleSubmit);
         }
       } else {
         isPending = false;
       }
     }
+  };
+
+  const syncOffline = (reviews) => {
+
+    reviews.forEach((review) => {
+      DBUtilsModule.postReview(review, handleSubmit, null, true);
+    });
   };
 
   const init = (formId, buttonId, listId, id) => {
@@ -210,7 +236,8 @@ const reviewFormModule = (function() {
   };
 
   return {
-    init
+    init,
+    syncOffline
   };
 
 }());

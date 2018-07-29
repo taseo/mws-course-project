@@ -9,6 +9,7 @@ import reviewFormModule from './modules/review-form-module';
 import reviewModule from './modules/review-module';
 
 import lazyPlaceholders from '../img/lazyPlaceholders';
+import IDBModule from './modules/idb-module';
 
 let restaurant;
 let newMap;
@@ -180,7 +181,21 @@ const fillReviewsHTML = (reviews) => {
     ul.appendChild(reviewModule.createReviewHTML(review));
   });
 
-  container.appendChild(ul);
+  // add offline reviews to DOM
+
+  IDBModule.getOfflineReviews().then((offlineReviews) => {
+
+    if (offlineReviews) {
+
+      offlineReviews.forEach(review => {
+        ul.prepend(reviewModule.createReviewHTML(review));
+      });
+
+      reviewFormModule.syncOffline(offlineReviews);
+    }
+
+    container.appendChild(ul);
+  });
 };
 
 /**

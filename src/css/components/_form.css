@@ -33,6 +33,13 @@
 }
 
 
+.response-error {
+  background-color: var(--red-100);
+  border-color: var(--red-200);
+  color: var(--red-900);
+}
+
+
 .form-input {
   padding: .375rem .75rem;
   color: var(--gray-text);

@@ -4,6 +4,7 @@ const IDBModule = (function() {
 
   const restaurantKeyVal = 'restaurants';
   const reviewKeyVal = 'reviews';
+  const offlineReviewsKeyVal = 'offlineReviews'
   const reviewsIndex = 'restaurantReview';
 
   const openDatabase = () => {
@@ -16,6 +17,7 @@ const IDBModule = (function() {
     return idb.open('main', 1, (upgradeDB) => {
       const restorantStore = upgradeDB.createObjectStore(restaurantKeyVal, {keyPath: 'id'});
       const reviewStore = upgradeDB.createObjectStore(reviewKeyVal, {keyPath: 'id'});
+      const offlineReviewStore = upgradeDB.createObjectStore(offlineReviewsKeyVal, {keyPath: 'id'});
 
       reviewStore.createIndex(reviewsIndex, 'restaurant_id');
     });
@@ -46,6 +48,21 @@ const IDBModule = (function() {
     });
   };
 
+  const removeFromIDB = (id, keyVal) => {
+    database.then((db) => {
+
+      if (!db) {
+        return;
+      }
+
+      const store = db.transaction(keyVal, 'readwrite').objectStore(keyVal);
+
+      store.delete(id);
+
+      return store.complete;
+    });
+  }
+
   const getCachedRestaurants = (id) => {
 
     return database.then((db) => {
@@ -59,6 +76,20 @@ const IDBModule = (function() {
       if (id) {
         return store.get(parseInt(id, 10));
       }
+
+      return store.getAll();
+    });
+  };
+
+  const getOfflineReviews = () => {
+
+    return database.then((db) => {
+
+      if (!db) {
+        return;
+      }
+
+      const store = db.transaction(offlineReviewsKeyVal).objectStore(offlineReviewsKeyVal);
 
       return store.getAll();
     });
@@ -81,10 +112,13 @@ const IDBModule = (function() {
 
   return {
     storeInIDB,
+    removeFromIDB,
     getCachedRestaurants,
     getCachedReviews,
+    getOfflineReviews,
     restaurantKeyVal,
-    reviewKeyVal
+    reviewKeyVal,
+    offlineReviewsKeyVal
   };
 
 }());
